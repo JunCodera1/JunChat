@@ -2,7 +2,6 @@ package com.component;
 
 import com.swing.ScrollBar;
 import java.awt.Color;
-import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
 public class ChatBody extends javax.swing.JPanel {
@@ -10,49 +9,50 @@ public class ChatBody extends javax.swing.JPanel {
     public ChatBody() {
         initComponents();
         init();
-        addItemRight("Dịch vụ của Google, được cung cấp miễn phí, dịch nhanh các từ, cụm từ và trang web giữa tiếng Anh và hơn 100 ngôn ngữ khác.Hello there ! it's really nice project but i'm facing issue in resizing the screen ....the home page doesn't move according to the Main screen .... kindly please tell me what to do ...");
-        addItemRight("Dịch vụ của Google, được cung cấp miễn phí, dịch nhanh các từ, cụm từ và trang web giữa tiếng Anh và hơn 100 ngôn ngữ khác.Hello there ! it's really nice project but i'm facing issue in resizing the screen ....the home page doesn't move according to the Main screen .... kindly please tell me what to do ...");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemRight("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemRight("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemRight("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemRight("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemRight("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemRight("Hello\nfweijfwiefjwo\nưefjifweof");
-        addItemLeft("Hello\nfweijfwiefjwo\nưefjifweof");
-       
+        addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.");
+        addItemRight("hello\nHi");
+        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.", "Kiki");
+        addDate("13/04/2024");
+        addItemLeft("hello\nerererew\newewe", "Dara");
+        addItemRight("hello\nerererew\newewe");
+        addItemLeft("hello\nerererew\newewe", "Jonh");
+        addDate("Today");
+        addItemRight("hello\nerererew\newewe");
 
     }
-    
-    private void init(){
+
+    private void init() {
         body.setLayout(new MigLayout("fillx", "", "5[]5"));
         sp.setVerticalScrollBar(new ScrollBar());
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
     }
-    
-    public void addItemLeft(String text){
-        ChatLeft item = new ChatLeft();
+
+    public void addItemLeft(String text, String user) {
+        ChatLeftWithProfile item = new ChatLeftWithProfile();
         item.setText(text);
-        body.add(item , "wrap, w ::80%");
-        // ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
-    }
-    
-    public void addItemRight(String text){
-        ChatRight item = new ChatRight();
-        item.setText(text);
-        body.add(item , "wrap, al right , w ::80%");
-        // ::80% set max with 80%
+        item.setUserProfile(user);
+        body.add(item, "wrap, w 100::80%");
+        //  ::80% set max with 80%
         body.repaint();
         body.revalidate();
     }
 
+    public void addItemRight(String text) {
+        ChatRight item = new ChatRight();
+        item.setText(text);
+        body.add(item, "wrap, al right, w 100::80%");
+        //  ::80% set max with 80%
+        body.repaint();
+        body.revalidate();
+    }
+
+    public void addDate(String date) {
+        ChatDate item = new ChatDate();
+        item.setDate(date);
+        body.add(item, "wrap, al center");
+        body.repaint();
+        body.revalidate();
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -70,11 +70,11 @@ public class ChatBody extends javax.swing.JPanel {
         body.setLayout(bodyLayout);
         bodyLayout.setHorizontalGroup(
             bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 828, Short.MAX_VALUE)
+            .addGap(0, 826, Short.MAX_VALUE)
         );
         bodyLayout.setVerticalGroup(
             bodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 556, Short.MAX_VALUE)
+            .addGap(0, 555, Short.MAX_VALUE)
         );
 
         sp.setViewportView(body);
@@ -87,7 +87,7 @@ public class ChatBody extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(sp)
         );
     }// </editor-fold>//GEN-END:initComponents
 

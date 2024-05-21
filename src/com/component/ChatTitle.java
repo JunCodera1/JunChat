@@ -36,7 +36,7 @@ public class ChatTitle extends javax.swing.JPanel {
 
         layer.setLayout(new java.awt.GridLayout(0, 1));
 
-        lbName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbName.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lbName.setForeground(new java.awt.Color(63, 63, 63));
         lbName.setText("Name");
         layer.add(lbName);
