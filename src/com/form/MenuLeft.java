@@ -1,19 +1,20 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
 package com.form;
 
-import net.miginfocom.swing.MigLayout;
+/**
+ *
+ * @author HP
+ */
+public class MenuLeft extends javax.swing.JPanel {
 
-public class Home extends javax.swing.JLayeredPane {
-
-    public Home() {
+    /**
+     * Creates new form MenuLeft
+     */
+    public MenuLeft() {
         initComponents();
-        init();
-    }
-    
-    private void init(){
-        setLayout(new MigLayout("debug, fillx, filly","0[200!]5[fill, 100%]5[200!]0",""));
-        this.add(new MenuLeft());
-        this.add(new Chat());
-        this.add(new MenuRight());
     }
 
     /**
@@ -25,19 +26,32 @@ public class Home extends javax.swing.JLayeredPane {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(229, 229, 229));
+
+        jLabel1.setText("Menu Left Note");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1067, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(112, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 589, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(91, 91, 91)
+                .addComponent(jLabel1)
+                .addContainerGap(520, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
