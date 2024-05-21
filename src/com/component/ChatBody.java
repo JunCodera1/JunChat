@@ -11,11 +11,11 @@ public class ChatBody extends javax.swing.JPanel {
         init();
         addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.");
         addItemRight("hello\nHi");
-        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.", "Kiki");
+        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.", "Frieren");
         addDate("13/04/2024");
-        addItemLeft("hello\nerererew\newewe", "Dara");
+        addItemLeft("hello\nerererew\newewe", "Frieren");
         addItemRight("hello\nerererew\newewe");
-        addItemLeft("hello\nerererew\newewe", "Jonh");
+        addItemLeft("hello\nerererew\newewe", "Frieren");
         addDate("Today");
         addItemRight("hello\nerererew\newewe");
 
