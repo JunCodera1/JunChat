@@ -22,7 +22,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-            <EmptyBorder bottom="10" left="10" right="10" top="10"/>
+            <EmptyBorder bottom="5" left="10" right="10" top="10"/>
           </Border>
         </Property>
         <Property name="selectionColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

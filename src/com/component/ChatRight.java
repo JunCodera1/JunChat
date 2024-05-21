@@ -6,11 +6,12 @@ public class ChatRight extends javax.swing.JLayeredPane {
 
     public ChatRight() {
         initComponents();
-        txt.setBackground(new Color(179, 233, 255));
+        txt.setBackground(new Color(153, 255, 204));
     }
 
     public void setText(String text) {
         txt.setText(text);
+        txt.setTime("10:35 PM");
     }
 
     @SuppressWarnings("unchecked")

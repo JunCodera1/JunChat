@@ -1,13 +1,18 @@
 package com.component;
 
-import com.swing.JIMSendTextPane;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.border.EmptyBorder;
 
 public class ChatItem extends javax.swing.JLayeredPane {
 
+    private JLabel label;
+    
     public ChatItem() {
         initComponents();
         txt.setEditable(false);
@@ -18,7 +23,20 @@ public class ChatItem extends javax.swing.JLayeredPane {
     public void setText(String text){
         txt.setText(text);
     }
-
+    
+    public void setTime(String time){
+        JLayeredPane layer  = new JLayeredPane();
+        layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        layer.setBorder(new EmptyBorder(0, 5, 10, 5));
+        label = new JLabel(time);
+        label.setForeground(new Color(110, 110, 110));
+        layer.add(label);
+        add(layer);
+    }
+    
+    public void sendSuccess(){
+        
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -27,7 +45,7 @@ public class ChatItem extends javax.swing.JLayeredPane {
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
-        txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 5, 10));
         txt.setSelectionColor(new java.awt.Color(94, 190, 255));
         add(txt);
     }// </editor-fold>//GEN-END:initComponents
