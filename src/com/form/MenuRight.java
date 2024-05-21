@@ -28,7 +28,7 @@ public class MenuRight extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(229, 229, 229));
+        setBackground(new java.awt.Color(249, 249, 249));
 
         jLabel1.setText("Menu Right Note");
 
