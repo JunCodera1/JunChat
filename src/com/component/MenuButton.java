@@ -1,5 +1,7 @@
 package com.component;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
@@ -36,6 +38,15 @@ public class MenuButton extends JButton{
         }
         else{
             setIcon(iconSimple);
+        }
+    }
+    
+    @Override
+    protected void paintComponent(Graphics grphcs){
+        super.paintComponent(grphcs); 
+        if(isSelected()){
+            grphcs.setColor(new Color(110, 213, 255));
+            grphcs.fillRect(0, getHeight() - 5, getWidth(), getHeight());
         }
     }
     
