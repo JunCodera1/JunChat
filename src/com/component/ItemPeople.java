@@ -1,10 +1,29 @@
 package com.component;
 
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public class ItemPeople extends javax.swing.JPanel {
 
     public ItemPeople(String name) {
         initComponents();
         lb.setText(name);
+        init();
+    }
+    
+    private void init(){
+        addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setBackground(new Color(229,229,229));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setBackground(new Color(244,244,244));
+            }           
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -14,7 +33,7 @@ public class ItemPeople extends javax.swing.JPanel {
         imageAvatar1 = new com.swing.ImageAvatar();
         lb = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(249, 249, 249));
+        setBackground(new java.awt.Color(244, 244, 244));
         setPreferredSize(new java.awt.Dimension(200, 50));
 
         imageAvatar1.setBorderSize(0);
