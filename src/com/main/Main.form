@@ -146,12 +146,22 @@
             </Container>
             <Container class="javax.swing.JLayeredPane" name="body">
 
-              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+              <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
               <SubComponents>
-                <Component class="com.form.Home" name="home1">
+                <Component class="com.form.Home" name="home">
                   <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
-                      <BorderConstraints direction="Center"/>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                      <CardConstraints cardName="card2"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="com.form.VIew_Image" name="vIew_Image">
+                  <AuxValues>
+                    <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="300"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                      <CardConstraints cardName="card3"/>
                     </Constraint>
                   </Constraints>
                 </Component>

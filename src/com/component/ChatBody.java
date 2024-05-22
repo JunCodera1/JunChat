@@ -11,7 +11,7 @@ public class ChatBody extends javax.swing.JPanel {
     public ChatBody() {
         initComponents();
         init();
-        addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.", new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
+        addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.", new ImageIcon(getClass().getResource("/com/icon/testing/window.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
         addItemRight("hello\nHi");
         addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.", "Tin", new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
         addDate("05/06/2021");
