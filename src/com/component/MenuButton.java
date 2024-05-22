@@ -45,7 +45,7 @@ public class MenuButton extends JButton{
     protected void paintComponent(Graphics grphcs){
         super.paintComponent(grphcs); 
         if(isSelected()){
-            grphcs.setColor(new Color(110, 213, 255));
+            grphcs.setColor(new Color(57, 239, 76));
             grphcs.fillRect(0, getHeight() - 5, getWidth(), getHeight());
         }
     }

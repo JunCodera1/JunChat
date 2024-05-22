@@ -1,6 +1,7 @@
 package com.component;
 
 import java.awt.Color;
+import javax.swing.Icon;
 
 public class ChatLeft extends javax.swing.JLayeredPane {
 
@@ -10,8 +11,20 @@ public class ChatLeft extends javax.swing.JLayeredPane {
     }
 
     public void setText(String text) {
-        txt.setText(text);
-        txt.setTime("10:30 PM");
+        if (text.equals("")) {
+            txt.hideText();
+        } else {
+            txt.setText(text);
+        }
+
+    }
+
+    public void setImage(Icon... image) {
+        txt.setImage(false, image);
+    }
+
+    public void setTime() {
+        txt.setTime("10:30 PM");    //  Testing
     }
 
     @SuppressWarnings("unchecked")
@@ -23,14 +36,14 @@ public class ChatLeft extends javax.swing.JLayeredPane {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(txt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
