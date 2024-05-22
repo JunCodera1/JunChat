@@ -7,7 +7,7 @@ public class BlurHash {
     }
 
     public static String encode(BufferedImage bufferedImage) {
-        return encode(bufferedImage, 4, 4);
+        return encode(bufferedImage, 4, 3);
     }
 
     public static String encode(BufferedImage bufferedImage, int componentX, int componentY) {
