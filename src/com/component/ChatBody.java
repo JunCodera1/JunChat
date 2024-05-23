@@ -1,9 +1,13 @@
 package com.component;
 
 import com.swing.ScrollBar;
+import java.awt.Adjustable;
 import java.awt.Color;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
 public class ChatBody extends javax.swing.JPanel {
@@ -15,12 +19,12 @@ public class ChatBody extends javax.swing.JPanel {
 //        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.", "Tin", new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
 //        addDate("05/06/2024");
 //        String img[] = {"L~DT;*WBoyj@x|WXodayRPaij?WC", "LRC[:qF2XnIalCSi--NeL%jJM+S5"};
-//        addItemRight("hello\nHi", img);
+//          addItemRight("hello\nHi", img);
 //        addItemLeft("hello\nerererew\newewe", "Kiki");
-//        addItemRight("hello\nerererew\newewe", new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
+        addItemRight("hello\nerererew\newewe", new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
 //        addItemLeft("Hello this is my friend", "Tin", new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")));
 //        addItemRight("Ok\nI'm Frieren");
-//        addItemLeft("", "りょう", new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
+          addItemLeft("", "りょう", new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
 //        addItemFile("", "Kiki", "mypdf.pdf", "2 MB");
 //        addItemFileRight("", "Myfile.rar", "5 MB");
     }
@@ -63,6 +67,8 @@ public class ChatBody extends javax.swing.JPanel {
         //  ::80% set max with 80%
         body.repaint();
         body.revalidate();
+        item.setTime();
+        scrollToBottom();
     }
     
     public void addItemFileRight(String text, String fileName, String fileSize) {
@@ -91,6 +97,19 @@ public class ChatBody extends javax.swing.JPanel {
         body.add(item, "wrap, al center");
         body.repaint();
         body.revalidate();
+    }
+    
+    private void scrollToBottom() {
+        JScrollBar verticalBar = sp.getVerticalScrollBar();
+        AdjustmentListener downScroller = new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum());
+                verticalBar.removeAdjustmentListener(this);
+            }
+        };
+        verticalBar.addAdjustmentListener(downScroller);
     }
 
     @SuppressWarnings("unchecked")

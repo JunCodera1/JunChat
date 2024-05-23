@@ -1,16 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.component;
 
+import com.event.PublicEvent;
 import com.swing.JIMSendTextPane;
+import com.swing.ScrollBar;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import net.miginfocom.swing.MigLayout;
-
 
 public class ChatBottom extends javax.swing.JPanel {
 
@@ -18,31 +22,62 @@ public class ChatBottom extends javax.swing.JPanel {
         initComponents();
         init();
     }
-    
-    private void init(){
-        setLayout(new MigLayout("fillx, filly", "", ""));
+
+    private void init() {
+        setLayout(new MigLayout("fillx, filly", "0[fill]0[]0[]2", "2[fill]2"));
         JScrollPane scroll = new JScrollPane();
+        scroll.setBorder(null);
         JIMSendTextPane txt = new JIMSendTextPane();
-        txt.addKeyListener(new KeyAdapter(){
+        txt.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyTyped(KeyEvent ke) {
                 refresh();
-            }            
+            }
         });
+        
+        txt.setHintText("Write Message Here ...");
         scroll.setViewportView(txt);
+        ScrollBar sb = new ScrollBar();
+        sb.setPreferredSize(new Dimension(2, 10));
+        scroll.setVerticalScrollBar(sb);
+        add(sb);
         add(scroll, "w 100%");
+        JPanel panel = new JPanel();
+        panel.setLayout(new MigLayout("filly", "0[]0", "0[bottom]0"));
+        panel.setPreferredSize(new Dimension(30, 28));
+        panel.setBackground(Color.WHITE);
+        JButton cmd = new JButton();
+        cmd.setBorder(null);
+        cmd.setContentAreaFilled(false);
+        cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cmd.setIcon(new ImageIcon(getClass().getResource("/com/icon/send.png")));
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                String text = txt.getText().trim();
+                if (!text.equals("")) {
+                    PublicEvent.getInstance().getEventChat().sendMessage(text);
+                    txt.setText("");
+                    txt.grabFocus();
+                    refresh();
+                } else {
+                    txt.grabFocus();
+                }
+            }
+        });
+        panel.add(cmd);
+        add(panel);
     }
-    
-    private void refresh(){
+
+    private void refresh() {
         revalidate();
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(242, 242, 242));
+        setBackground(new java.awt.Color(229, 229, 229));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

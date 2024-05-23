@@ -3,6 +3,8 @@ package com.form;
 import com.component.ChatBody;
 import com.component.ChatBottom;
 import com.component.ChatTitle;
+import com.event.EventChat;
+import com.event.PublicEvent;
 import net.miginfocom.swing.MigLayout;
 
 public class Chat extends javax.swing.JPanel {
@@ -13,13 +15,19 @@ public class Chat extends javax.swing.JPanel {
     }
     
     private void init(){
-        setLayout(new MigLayout("fillx", "0[fill]0", "[]0[100%, bottom]0[shrink 0]"));
+        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, bottom]0[shrink 0]0"));
         ChatTitle chatTitle = new ChatTitle();
         ChatBody chatBody = new ChatBody();
         ChatBottom chatBottom = new ChatBottom();
+        PublicEvent.getInstance().addEventChat(new EventChat() {
+            @Override
+            public void sendMessage(String text) {
+                chatBody.addItemRight(text);
+            }
+        });
         add(chatTitle, "wrap");
         add(chatBody, "wrap");
-        add(chatBottom);
+        add(chatBottom,"h ::30%");
     }
 
     @SuppressWarnings("unchecked")
