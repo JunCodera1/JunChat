@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.main;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
 import com.event.EventImageView;
 import com.event.EventMain;
 import com.event.PublicEvent;
+import com.service.Service;
 import com.swing.ComponentResizer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -35,6 +31,7 @@ public class Main extends javax.swing.JFrame {
         vIew_Image.setVisible(false);
         home.setVisible(false);
         initEvent();
+        Service.getInstance().startServer();
     }
 
     private void initEvent() {
