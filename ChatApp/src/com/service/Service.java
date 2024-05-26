@@ -1,13 +1,13 @@
 package com.service;
 
-
-import io.socket.client.Socket;
+import com.event.PublicEvent;
+import com.model.ModelUserAccount;
 import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JTextArea;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Service {
 
@@ -15,6 +15,7 @@ public class Service {
     private Socket client;
     private final int PORT_NUMBER = 9999;
     private final String IP = "localhost";
+    private ModelUserAccount user;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -29,17 +30,36 @@ public class Service {
     public void startServer() {
         try {
             client = IO.socket("http://" + IP + ":" + PORT_NUMBER);
+            client.on("list_user", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    //  list user
+                    List<ModelUserAccount> users = new ArrayList<>();
+                    for (Object o : os) {
+                        users.add(new ModelUserAccount(o));
+                    }
+                    PublicEvent.getInstance().getEventMenuLeft().newUser(users);
+                }
+            });
+            client.open();
         } catch (URISyntaxException e) {
             error(e);
         }
-        client.open();
     }
-    
+
     public Socket getClient() {
         return client;
     }
-    
-    private void error(Exception e){
+
+    public ModelUserAccount getUser() {
+        return user;
+    }
+
+    public void setUser(ModelUserAccount user) {
+        this.user = user;
+    }
+
+    private void error(Exception e) {
         System.err.println(e);
     }
 }
