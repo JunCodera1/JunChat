@@ -1,7 +1,7 @@
 package com.model;
 
 public class ModelRegister {
-   
+
     public String getUserName() {
         return userName;
     }
@@ -18,14 +18,14 @@ public class ModelRegister {
         this.password = password;
     }
 
+    public ModelRegister(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
+
     public ModelRegister() {
     }
 
-    public ModelRegister(String password, String userName) {
-        this.password = password;
-        this.userName = userName;
-    }    
-    
-    String password; 
-    String userName;
+    private String userName;
+    private String password;
 }

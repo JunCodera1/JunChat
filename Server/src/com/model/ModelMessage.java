@@ -18,18 +18,24 @@ public class ModelMessage {
         this.message = message;
     }
 
-    public ModelMessage(boolean action, String message) {
-        this.action = action;
-        this.message = message;
+    public Object getData() {
+        return data;
     }
 
-    
-    
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public ModelMessage(boolean action, String message, Object data) {
+        this.action = action;
+        this.message = message;
+        this.data = data;
+    }
+
     public ModelMessage() {
     }
-    
-    
-    
-    boolean action;
-    String message;
+
+    private boolean action;
+    private String message;
+    private Object data;
 }
