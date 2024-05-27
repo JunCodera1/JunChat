@@ -6,11 +6,14 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
+import com.corundumstudio.socketio.listener.DisconnectListener;
+import com.model.ModelClient;
 import com.model.ModelLogin;
 import com.model.ModelMessage;
 import com.model.ModelRegister;
 import com.model.ModelUserAccount;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTextArea;
 
@@ -19,6 +22,7 @@ public class Service {
     private static Service instance;
     private SocketIOServer server;
     private ServiceUser serviceUser;
+    private List<ModelClient> listClient;
     private JTextArea textArea;
     private final int PORT_NUMBER = 9999;
 
@@ -32,6 +36,7 @@ public class Service {
     private Service(JTextArea textArea) {
         this.textArea = textArea;
         serviceUser = new ServiceUser();
+        listClient = new ArrayList<>();
     }
 
     public void startServer() {
@@ -52,37 +57,31 @@ public class Service {
                 if (message.isAction()) {
                     textArea.append("User has Register :" + t.getUserName() + " Pass :" + t.getPassword() + "\n");
                     server.getBroadcastOperations().sendEvent("list_user", (ModelUserAccount) message.getData());
+                    addClient(sioc, (ModelUserAccount) message.getData());
                 }
             }
         });
-       server.addEventListener("login", ModelLogin.class, new DataListener<ModelLogin>() {
+        server.addEventListener("login", ModelLogin.class, new DataListener<ModelLogin>() {
             @Override
             public void onData(SocketIOClient sioc, ModelLogin loginData, AckRequest ackRequest) throws Exception {
                 try {
-                    // Attempt to log in the user with the provided credentials
                     ModelUserAccount userAccount = serviceUser.login(loginData);
 
-                    // Check if the userAccount is null
                     if (userAccount != null) {
-                        // Proceed with operations on userAccount safely
-                        int userID = userAccount.getUserID(); // Example of accessing userID
-                        // Send acknowledgment with success and user account data
+                        int userID = userAccount.getUserID();
                         ackRequest.sendAckData(true, userAccount);
+                        addClient(sioc, userAccount);
+                        userConnect(userAccount.getUserID());
                     } else {
-                        // Send acknowledgment with failure
                         ackRequest.sendAckData(false);
                     }
                 } catch (NullPointerException e) {
-                    // Log the exception for debugging purposes
                     System.err.println("NullPointerException occurred: " + e.getMessage());
                     e.printStackTrace();
-                    // Optionally, send an error response
                     ackRequest.sendAckData(false, "Login failed due to internal error.");
                 } catch (Exception e) {
-                    // Log the exception for debugging purposes
                     System.err.println("Exception occurred: " + e.getMessage());
                     e.printStackTrace();
-                    // Optionally, send an error response
                     ackRequest.sendAckData(false, "An error occurred during login.");
                 }
             }
@@ -98,7 +97,42 @@ public class Service {
                 }
             }
         });
+        server.addDisconnectListener(new DisconnectListener() {
+            @Override
+            public void onDisconnect(SocketIOClient sioc) {
+                int userID = removeClient(sioc);
+                if(userID != 0){
+                    // removed
+                    userDisconnect(userID);
+                }
+            }
+        });
         server.start();
         textArea.append("Server has Start on port : " + PORT_NUMBER + "\n");
+    }
+    
+    private void userConnect(int userID){
+        server.getBroadcastOperations().sendEvent("user_status", userID, true);
+    }
+    
+    private void userDisconnect(int userID){
+        server.getBroadcastOperations().sendEvent("user_status", userID, false);
+    }
+    
+    private void addClient(SocketIOClient client, ModelUserAccount user){
+        listClient.add(new ModelClient(client, user));
+    }
+    
+    public int removeClient(SocketIOClient client){
+        for(ModelClient d : listClient){
+            if(d.getClient() == client){
+                listClient.remove(d);
+                return d.getUser().getUserID();
+            }
+        }
+        return 0;
+    }
+    public List<ModelClient> getListClient() {
+        return listClient;
     }
 }

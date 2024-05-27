@@ -4,6 +4,7 @@ import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
 import com.event.EventImageView;
 import com.event.EventMain;
 import com.event.PublicEvent;
+import com.model.ModelUserAccount;
 import com.service.Service;
 import com.swing.ComponentResizer;
 import java.awt.Dimension;
@@ -47,6 +48,16 @@ public class Main extends javax.swing.JFrame {
                 login.setVisible(false);
                 Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
             }
+
+            @Override
+            public void selectUser(ModelUserAccount user) {
+                home.setUser(user);
+            }
+
+            @Override
+            public void updateUser(ModelUserAccount user) {
+                home.updateUser(user);
+            } 
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override

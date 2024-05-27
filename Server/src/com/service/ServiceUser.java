@@ -1,6 +1,7 @@
 package com.service;
 
 import com.connection.DatabaseConnection;
+import com.model.ModelClient;
 import com.model.ModelLogin;
 import com.model.ModelMessage;
 import com.model.ModelRegister;
@@ -124,13 +125,22 @@ public class ServiceUser {
                 String userName = r.getString(2);
                 String gender = r.getString(3);
                 String image = r.getString(4);
-                list.add(new ModelUserAccount(userID, userName, gender, image, true));
+                list.add(new ModelUserAccount(userID, userName, gender, image, checkUserStatus(userID)));
             }
         } finally {
             if (r != null) r.close();
             if (p != null) p.close();
         }
         return list;
+    }
+    private boolean checkUserStatus(int userID){
+        List<ModelClient> clients = Service.getInstance(null).getListClient();
+        for(ModelClient c : clients){
+            if(c.getUser().getUserID() == userID){
+                return true;
+            }
+        }
+        return false;
     }
 
     // SQL Queries

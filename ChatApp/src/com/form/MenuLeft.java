@@ -5,6 +5,7 @@ import com.event.EventMenuLeft;
 import com.event.PublicEvent;
 import com.model.ModelUserAccount;
 import com.swing.ScrollBar;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import net.miginfocom.swing.MigLayout;
@@ -27,8 +28,48 @@ public class MenuLeft extends javax.swing.JPanel {
             public void newUser(List<ModelUserAccount> users) {
                 for (ModelUserAccount d : users) {
                     userAccount.add(d);
-                    menuList.add(new ItemPeople(d.getUserName()), "wrap");
+                    menuList.add(new ItemPeople(d), "wrap");
                     refreshMenuList();
+                }
+            }
+
+            @Override
+            public void userConnect(int userID) {
+                for (ModelUserAccount u : userAccount) {
+                    if (u.getUserID() == userID) {
+                        u.setStatus(true);
+                        PublicEvent.getInstance().getEventMain().updateUser(u);
+                        break;
+                    }
+                }
+                if (menuMessage.isSelected()) {
+                    for (Component com : menuList.getComponents()) {
+                        ItemPeople item = (ItemPeople) com;
+                        if (item.getUser().getUserID() == userID) {
+                            item.updateStatus();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void userDisconnect(int userID) {
+                for (ModelUserAccount u : userAccount) {
+                    if (u.getUserID() == userID) {
+                        u.setStatus(false);
+                        PublicEvent.getInstance().getEventMain().updateUser(u);
+                        break;
+                    }
+                }
+                if (menuMessage.isSelected()) {
+                    for (Component com : menuList.getComponents()) {
+                        ItemPeople item = (ItemPeople) com;
+                        if (item.getUser().getUserID() == userID) {
+                            item.updateStatus();
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -39,7 +80,7 @@ public class MenuLeft extends javax.swing.JPanel {
         //  test data
         menuList.removeAll();
         for (ModelUserAccount d : userAccount) {
-            menuList.add(new ItemPeople(d.getUserName()), "wrap");
+            menuList.add(new ItemPeople(null), "wrap");
         }
         refreshMenuList();
     }
@@ -48,7 +89,7 @@ public class MenuLeft extends javax.swing.JPanel {
         //  test data
         menuList.removeAll();
         for (int i = 0; i < 5; i++) {
-            menuList.add(new ItemPeople("Group " + i), "wrap");
+            menuList.add(new ItemPeople(null), "wrap");
         }
         refreshMenuList();
     }
@@ -57,7 +98,7 @@ public class MenuLeft extends javax.swing.JPanel {
         //  test data
         menuList.removeAll();
         for (int i = 0; i < 10; i++) {
-            menuList.add(new ItemPeople("Box " + i), "wrap");
+            menuList.add(new ItemPeople(null), "wrap");
         }
         refreshMenuList();
     }

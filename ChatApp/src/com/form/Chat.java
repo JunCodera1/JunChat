@@ -5,20 +5,25 @@ import com.component.ChatBottom;
 import com.component.ChatTitle;
 import com.event.EventChat;
 import com.event.PublicEvent;
+import com.model.ModelUserAccount;
 import net.miginfocom.swing.MigLayout;
 
 public class Chat extends javax.swing.JPanel {
+
+    private ChatTitle chatTitle;
+    private ChatBody chatBody;
+    private ChatBottom chatBottom;
 
     public Chat() {
         initComponents();
         init();
     }
-    
-    private void init(){
+
+    private void init() {
         setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, bottom]0[shrink 0]0"));
-        ChatTitle chatTitle = new ChatTitle();
-        ChatBody chatBody = new ChatBody();
-        ChatBottom chatBottom = new ChatBottom();
+        chatTitle = new ChatTitle();
+        chatBody = new ChatBody();
+        chatBottom = new ChatBottom();
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
             public void sendMessage(String text) {
@@ -27,7 +32,16 @@ public class Chat extends javax.swing.JPanel {
         });
         add(chatTitle, "wrap");
         add(chatBody, "wrap");
-        add(chatBottom,"h ::30%");
+        add(chatBottom, "h ::30%");
+    }
+
+    public void setUser(ModelUserAccount user) {
+        chatTitle.setUsername(user);
+        chatBottom.setUser(user);
+    }
+    
+    public void updateUser(ModelUserAccount user){
+        chatTitle.updateUser(user);
     }
 
     @SuppressWarnings("unchecked")

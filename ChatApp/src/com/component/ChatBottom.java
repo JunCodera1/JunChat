@@ -1,6 +1,7 @@
 package com.component;
 
 import com.event.PublicEvent;
+import com.model.ModelUserAccount;
 import com.swing.JIMSendTextPane;
 import com.swing.ScrollBar;
 import java.awt.Color;
@@ -19,6 +20,16 @@ import net.miginfocom.swing.MigLayout;
 
 public class ChatBottom extends javax.swing.JPanel {
 
+    public ModelUserAccount getUser() {
+        return user;
+    }
+
+    public void setUser(ModelUserAccount user) {
+        this.user = user;
+    }
+    
+    private ModelUserAccount user;
+    
     public ChatBottom() {
         initComponents();
         init();
