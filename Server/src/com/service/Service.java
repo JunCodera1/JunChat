@@ -10,7 +10,9 @@ import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.model.ModelClient;
 import com.model.ModelLogin;
 import com.model.ModelMessage;
+import com.model.ModelReceiveMessage;
 import com.model.ModelRegister;
+import com.model.ModelSendMessage;
 import com.model.ModelUserAccount;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -63,26 +65,14 @@ public class Service {
         });
         server.addEventListener("login", ModelLogin.class, new DataListener<ModelLogin>() {
             @Override
-            public void onData(SocketIOClient sioc, ModelLogin loginData, AckRequest ackRequest) throws Exception {
-                try {
-                    ModelUserAccount userAccount = serviceUser.login(loginData);
-
-                    if (userAccount != null) {
-                        int userID = userAccount.getUserID();
-                        ackRequest.sendAckData(true, userAccount);
-                        addClient(sioc, userAccount);
-                        userConnect(userAccount.getUserID());
-                    } else {
-                        ackRequest.sendAckData(false);
-                    }
-                } catch (NullPointerException e) {
-                    System.err.println("NullPointerException occurred: " + e.getMessage());
-                    e.printStackTrace();
-                    ackRequest.sendAckData(false, "Login failed due to internal error.");
-                } catch (Exception e) {
-                    System.err.println("Exception occurred: " + e.getMessage());
-                    e.printStackTrace();
-                    ackRequest.sendAckData(false, "An error occurred during login.");
+            public void onData(SocketIOClient sioc, ModelLogin t, AckRequest ar) throws Exception {
+                ModelUserAccount login = serviceUser.login(t);
+                if (login != null) {
+                    ar.sendAckData(true, login);
+                    addClient(sioc, login);
+                    userConnect(login.getUserID());
+                } else {
+                    ar.sendAckData(false);
                 }
             }
         });
@@ -97,12 +87,18 @@ public class Service {
                 }
             }
         });
+        server.addEventListener("send_to_user", ModelSendMessage.class, new DataListener<ModelSendMessage>() {
+            @Override
+            public void onData(SocketIOClient sioc, ModelSendMessage t, AckRequest ar) throws Exception {
+                sendToClient(t);
+            }
+        });
         server.addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient sioc) {
                 int userID = removeClient(sioc);
-                if(userID != 0){
-                    // removed
+                if (userID != 0) {
+                    //  removed
                     userDisconnect(userID);
                 }
             }
@@ -110,28 +106,38 @@ public class Service {
         server.start();
         textArea.append("Server has Start on port : " + PORT_NUMBER + "\n");
     }
-    
-    private void userConnect(int userID){
+
+    private void userConnect(int userID) {
         server.getBroadcastOperations().sendEvent("user_status", userID, true);
     }
-    
-    private void userDisconnect(int userID){
+
+    private void userDisconnect(int userID) {
         server.getBroadcastOperations().sendEvent("user_status", userID, false);
     }
-    
-    private void addClient(SocketIOClient client, ModelUserAccount user){
+
+    private void addClient(SocketIOClient client, ModelUserAccount user) {
         listClient.add(new ModelClient(client, user));
     }
-    
-    public int removeClient(SocketIOClient client){
-        for(ModelClient d : listClient){
-            if(d.getClient() == client){
+
+    private void sendToClient(ModelSendMessage data) {
+        for (ModelClient c : listClient) {
+            if (c.getUser().getUserID() == data.getToUserID()) {
+                c.getClient().sendEvent("receive_ms", new ModelReceiveMessage(data.getFromUserID(), data.getText()));
+                break;
+            }
+        }
+    }
+
+    public int removeClient(SocketIOClient client) {
+        for (ModelClient d : listClient) {
+            if (d.getClient() == client) {
                 listClient.remove(d);
                 return d.getUser().getUserID();
             }
         }
         return 0;
     }
+
     public List<ModelClient> getListClient() {
         return listClient;
     }

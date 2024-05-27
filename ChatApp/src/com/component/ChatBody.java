@@ -1,5 +1,7 @@
 package com.component;
 
+import com.model.ModelReceiveMessage;
+import com.model.ModelSendMessage;
 import com.swing.ScrollBar;
 import java.awt.Adjustable;
 import java.awt.Color;
@@ -15,18 +17,6 @@ public class ChatBody extends javax.swing.JPanel {
     public ChatBody() {
         initComponents();
         init();
-          //addItemRight("Send a text message to a group of contacts. Include photos, personalize your texts, and track who clicked your links.", new ImageIcon(getClass().getResource("/com/icon/testing/window.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
-//        addItemLeft("Simpletext started as a passion project because I couldn’t find what I was looking for. Most apps were trying to do too much and ended up bloated with features I don’t need. So I built Simpletext based on a simple premise — what if there’s an app that refuses to do more, choosing instead to do just one thing, and do it well? For Simpletext, that one thing is writing.", "Tin", new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
-//        addDate("05/06/2024");
-//        String img[] = {"L~DT;*WBoyj@x|WXodayRPaij?WC", "LRC[:qF2XnIalCSi--NeL%jJM+S5"};
-//          addItemRight("hello\nHi", img);
-//        addItemLeft("hello\nerererew\newewe", "Kiki");
-        addItemRight("hello\nerererew\newewe", new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
-//        addItemLeft("Hello this is my friend", "Tin", new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")), new ImageIcon(getClass().getResource("/com/icon/testing/frieren.jpg")));
-//        addItemRight("Ok\nI'm Frieren");
-          addItemLeft("", "りょう", new ImageIcon(getClass().getResource("/com/icon/testing/ryou.jpg")));
-//        addItemFile("", "Kiki", "mypdf.pdf", "2 MB");
-//        addItemFileRight("", "Myfile.rar", "5 MB");
     }
 
     private void init() {
@@ -35,16 +25,13 @@ public class ChatBody extends javax.swing.JPanel {
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
     }
 
-    public void addItemLeft(String text, String user, Icon... image) {
-        ChatLeftWithProfile item = new ChatLeftWithProfile();
-        item.setText(text);
-        item.setImage(image);
+    public void addItemLeft(ModelReceiveMessage data) {
+        ChatLeft item = new ChatLeft();
+        item.setText(data.getText());
         item.setTime();
-        item.setUserProfile(user);
         body.add(item, "wrap, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
+        repaint();
+        revalidate();
     }
     
     public void addItemFile(String text, String user, String fileName, String fileSize) {
@@ -59,14 +46,12 @@ public class ChatBody extends javax.swing.JPanel {
         body.revalidate();
     }
 
-    public void addItemRight(String text, Icon... image) {
+    public void addItemRight(ModelSendMessage data) {
         ChatRight item = new ChatRight();
-        item.setText(text);
-        item.setImage(image);
+        item.setText(data.getText());
         body.add(item, "wrap, al right, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
+        repaint();
+        revalidate();
         item.setTime();
         scrollToBottom();
     }
@@ -97,6 +82,11 @@ public class ChatBody extends javax.swing.JPanel {
         body.add(item, "wrap, al center");
         body.repaint();
         body.revalidate();
+    }
+    public void clearChat(){
+        body.removeAll();
+        repaint();
+        revalidate();
     }
     
     private void scrollToBottom() {

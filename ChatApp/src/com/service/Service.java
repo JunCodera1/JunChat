@@ -1,6 +1,7 @@
 package com.service;
 
 import com.event.PublicEvent;
+import com.model.ModelReceiveMessage;
 import com.model.ModelUserAccount;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -56,6 +57,13 @@ public class Service {
                         //  disconnect
                         PublicEvent.getInstance().getEventMenuLeft().userDisconnect(userID);
                     }
+                }
+            });
+            client.on("receive_ms", new Emitter.Listener() {
+                @Override
+                public void call(Object... os) {
+                    ModelReceiveMessage message = new ModelReceiveMessage(os[0]);
+                    PublicEvent.getInstance().getEventChat().receiveMessage(message);
                 }
             });
             client.open();
