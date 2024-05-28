@@ -122,7 +122,7 @@ public class Service {
     private void sendToClient(ModelSendMessage data) {
         for (ModelClient c : listClient) {
             if (c.getUser().getUserID() == data.getToUserID()) {
-                c.getClient().sendEvent("receive_ms", new ModelReceiveMessage(data.getFromUserID(), data.getText()));
+                c.getClient().sendEvent("receive_ms", new ModelReceiveMessage(data.getMessageType(),data.getFromUserID(), data.getText()));
                 break;
             }
         }

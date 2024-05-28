@@ -1,9 +1,18 @@
 package com.model;
 
+import com.app.MessageType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ModelSendMessage {
+    
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
 
     public int getFromUserID() {
         return fromUserID;
@@ -28,23 +37,27 @@ public class ModelSendMessage {
     public void setText(String text) {
         this.text = text;
     }
+    private MessageType messageType;
+    private int fromUserID;
+    private int toUserID;
+    private String text;
 
     public ModelSendMessage() {
     }
 
-    public ModelSendMessage(int fromUserID, int toUserID, String text) {
+    public ModelSendMessage(MessageType messageType, int fromUserID, int toUserID, String text) {
+        this.messageType = messageType;
         this.fromUserID = fromUserID;
         this.toUserID = toUserID;
         this.text = text;
     }
 
-    int fromUserID;
-    int toUserID;
-    String text;
-
+    
+    
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
+            json.put("messageType", messageType.getValue());
             json.put("fromUserID", fromUserID);
             json.put("toUserID", toUserID);
             json.put("text", text);

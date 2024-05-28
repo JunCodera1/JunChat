@@ -54,21 +54,20 @@ public class ChatItem extends javax.swing.JLayeredPane {
         layer.add(label);
         add(layer);
     }
-    
 
     public void setImage(boolean right, Icon... image) {
-        if(image.length > 0){
-          JLayeredPane layer = new JLayeredPane();
-          layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
-          layer.setBorder(new EmptyBorder(0, 5, 10, 5));
-          ChatImage chatImage = new ChatImage(right);
-          chatImage.addImage(image);
-          layer.add(chatImage);
-          add(layer);  
+        if (image.length > 0) {
+            JLayeredPane layer = new JLayeredPane();
+            layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+            layer.setBorder(new EmptyBorder(0, 5, 10, 5));
+            ChatImage chatImage = new ChatImage(right);
+            chatImage.addImage(image);
+            layer.add(chatImage);
+            add(layer);
         }
-        
+
     }
-    
+
     public void setImage(boolean right, String... image) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
@@ -78,7 +77,7 @@ public class ChatItem extends javax.swing.JLayeredPane {
         layer.add(chatImage);
         add(layer);
     }
-    
+
     public void setFile(String fileName, String fileSize) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -87,6 +86,15 @@ public class ChatItem extends javax.swing.JLayeredPane {
         chatFile.setFile(fileName, fileSize);
         layer.add(chatFile);
         add(layer);
+    }
+
+    public void setEmoji(boolean right, Icon icon) {
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 10, 5));
+        layer.add(new JLabel(icon));
+        add(layer);
+        setBackground(null);
     }
 
     public void sendSuccess() {
@@ -121,9 +129,11 @@ public class ChatItem extends javax.swing.JLayeredPane {
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+        if (getBackground() != null) {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+        }
         super.paintComponent(grphcs);
     }
 

@@ -1,5 +1,7 @@
 package com.component;
 
+import com.app.MessageType;
+import com.emoji.Emoji;
 import com.model.ModelReceiveMessage;
 import com.model.ModelSendMessage;
 import com.swing.ScrollBar;
@@ -26,14 +28,21 @@ public class ChatBody extends javax.swing.JPanel {
     }
 
     public void addItemLeft(ModelReceiveMessage data) {
-        ChatLeft item = new ChatLeft();
-        item.setText(data.getText());
-        item.setTime();
-        body.add(item, "wrap, w 100::80%");
+        if (data.getMessageType() == MessageType.TEXT) {
+            ChatLeft item = new ChatLeft();
+            item.setText(data.getText());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
+        }else if(data.getMessageType() == MessageType.EMOJI){
+            ChatLeft item = new ChatLeft();
+            item.setEmoji(Emoji.getInstance().getEmoji(Integer.valueOf(data.getText())).getIcon());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
+        }
         repaint();
         revalidate();
     }
-    
+
     public void addItemFile(String text, String user, String fileName, String fileSize) {
         ChatLeftWithProfile item = new ChatLeftWithProfile();
         item.setText(text);
@@ -47,15 +56,22 @@ public class ChatBody extends javax.swing.JPanel {
     }
 
     public void addItemRight(ModelSendMessage data) {
-        ChatRight item = new ChatRight();
-        item.setText(data.getText());
-        body.add(item, "wrap, al right, w 100::80%");
+        if (data.getMessageType() == MessageType.TEXT) {
+            ChatRight item = new ChatRight();
+            item.setText(data.getText());
+            body.add(item, "wrap, al right, w 100::80%");
+            item.setTime();
+        }else if(data.getMessageType() == MessageType.EMOJI){
+            ChatRight item = new ChatRight();
+            item.setEmoji(Emoji.getInstance().getEmoji(Integer.valueOf(data.getText())).getIcon());
+            body.add(item, "wrap, al right, w 100::80%");
+            item.setTime();
+        }
         repaint();
         revalidate();
-        item.setTime();
         scrollToBottom();
     }
-    
+
     public void addItemFileRight(String text, String fileName, String fileSize) {
         ChatRight item = new ChatRight();
         item.setText(text);
@@ -65,7 +81,7 @@ public class ChatBody extends javax.swing.JPanel {
         body.repaint();
         body.revalidate();
     }
-    
+
     public void addItemRight(String text, String[] image) {
         ChatRight item = new ChatRight();
         item.setText(text);
@@ -83,12 +99,13 @@ public class ChatBody extends javax.swing.JPanel {
         body.repaint();
         body.revalidate();
     }
-    public void clearChat(){
+
+    public void clearChat() {
         body.removeAll();
         repaint();
         revalidate();
     }
-    
+
     private void scrollToBottom() {
         JScrollBar verticalBar = sp.getVerticalScrollBar();
         AdjustmentListener downScroller = new AdjustmentListener() {

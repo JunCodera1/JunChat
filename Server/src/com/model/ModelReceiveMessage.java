@@ -2,8 +2,13 @@ package com.model;
 
 public class ModelReceiveMessage {
 
-    int fromUserID;
-    String text;
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
 
     public int getFromUserID() {
         return fromUserID;
@@ -18,16 +23,21 @@ public class ModelReceiveMessage {
     }
 
     public void setText(String text) {
-        this.fromUserID = fromUserID;
         this.text = text;
     }
 
-    public ModelReceiveMessage(Object json) {
-       
+    public ModelReceiveMessage() {
     }
 
-    public ModelReceiveMessage(int fromUserID, String text) {
+    public ModelReceiveMessage(int messageType, int fromUserID, String text) {
+        this.messageType = messageType;
         this.fromUserID = fromUserID;
         this.text = text;
     }
+    
+    
+
+    private int messageType;
+    private int fromUserID;
+    private String text;
 }

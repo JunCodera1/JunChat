@@ -3,6 +3,14 @@ package com.model;
 
 public class ModelSendMessage {
 
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
+
     public int getFromUserID() {
         return fromUserID;
     }
@@ -30,14 +38,18 @@ public class ModelSendMessage {
     public ModelSendMessage() {
     }
 
-    public ModelSendMessage(int fromUserID, int toUserID, String text) {
+    public ModelSendMessage(int messageType, int fromUserID, int toUserID, String text) {
+        this.messageType = messageType;
         this.fromUserID = fromUserID;
         this.toUserID = toUserID;
         this.text = text;
     }
+    
+    
 
-    int fromUserID;
-    int toUserID;
-    String text;
+    private int messageType;
+    private int fromUserID;
+    private int toUserID;
+    private String text;
 
 }
