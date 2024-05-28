@@ -1,11 +1,13 @@
 package com.service;
 
 import com.connection.DatabaseConnection;
+import com.encrypt.EncryDecry;
 import com.model.ModelClient;
 import com.model.ModelLogin;
 import com.model.ModelMessage;
 import com.model.ModelRegister;
 import com.model.ModelUserAccount;
+import java.security.SecureRandom;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,8 +18,15 @@ import java.util.List;
 
 public class ServiceUser {
 
+    // Instance
+    private final Connection con;
+    private final EncryDecry encoder;
+    String secretKeyPassword = generateRandomSecretKey();
+    String passwordEncrypt;
+
     public ServiceUser() {
         this.con = DatabaseConnection.getInstance().getConnection();
+        this.encoder = new EncryDecry();
     }
 
     public ModelMessage register(ModelRegister data) {
@@ -26,7 +35,7 @@ public class ServiceUser {
         ResultSet r = null;
 
         try {
-            // Create PreparedStatement with scrollable ResultSet
+            // Tạo PreparedStatement để kiểm tra tên người dùng đã tồn tại chưa
             p = con.prepareStatement(CHECK_USER, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             p.setString(1, data.getUserName());
             r = p.executeQuery();
@@ -38,11 +47,15 @@ public class ServiceUser {
             }
             r.close();
             p.close();
+
             if (message.isAction()) {
+                // Encrypt the password
+                String passwordEncrypt = encoder.encrypt(data.getPassword(), secretKeyPassword);
+                // Nếu tên người dùng chưa tồn tại, thêm người dùng mới vào cơ sở dữ liệu
                 con.setAutoCommit(false);
                 p = con.prepareStatement(INSERT_USER, PreparedStatement.RETURN_GENERATED_KEYS);
                 p.setString(1, data.getUserName());
-                p.setString(2, data.getPassword());
+                p.setString(2, passwordEncrypt);
                 p.execute();
                 r = p.getGeneratedKeys();
                 if (r.first()) {
@@ -56,8 +69,9 @@ public class ServiceUser {
                     p.close();
                     con.commit();
                     con.setAutoCommit(true);
+                    // Gửi tin nhắn xác nhận đăng ký thành công
                     message.setAction(true);
-                    message.setMessage("Ok");
+                    message.setMessage("Registration Successful");
                     message.setData(new ModelUserAccount(userID, data.getUserName(), "", "", true));
                 }
             }
@@ -75,8 +89,12 @@ public class ServiceUser {
             }
         } finally {
             try {
-                if (r != null) r.close();
-                if (p != null) p.close();
+                if (r != null) {
+                    r.close();
+                }
+                if (p != null) {
+                    p.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -84,16 +102,19 @@ public class ServiceUser {
         return message;
     }
 
-    public ModelUserAccount login(ModelLogin login) throws SQLException {
-        ModelUserAccount data = null;
+    public ModelUserAccount login(ModelLogin data) {
+        ModelUserAccount userAccount = null;
         PreparedStatement p = null;
         ResultSet r = null;
 
         try {
-            // Create PreparedStatement with scrollable ResultSet
+            // Mã hóa mật khẩu nhập vào trước khi so sánh
+            String encryptedPassword = encoder.encrypt(data.getPassword(), secretKeyPassword);
+
+            // Tạo PreparedStatement để kiểm tra thông tin đăng nhập
             p = con.prepareStatement(LOGIN, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            p.setString(1, login.getUserName());
-            p.setString(2, login.getPassword());
+            p.setString(1, data.getUserName());
+            p.setString(2, encryptedPassword); // So sánh với mật khẩu đã mã hóa
             r = p.executeQuery();
 
             if (r.first()) {
@@ -101,14 +122,26 @@ public class ServiceUser {
                 String userName = r.getString(2);
                 String gender = r.getString(3);
                 String image = r.getString(4);
-                data = new ModelUserAccount(userID, userName, gender, image, true);
+                userAccount = new ModelUserAccount(userID, userName, gender, image, true);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
-            if (r != null) r.close();
-            if (p != null) p.close();
+            try {
+                if (r != null) {
+                    r.close();
+                }
+                if (p != null) {
+                    p.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return data;
+
+        return userAccount;
     }
+
 
     public List<ModelUserAccount> getUser(int exitUser) throws SQLException {
         List<ModelUserAccount> list = new ArrayList<>();
@@ -128,28 +161,62 @@ public class ServiceUser {
                 list.add(new ModelUserAccount(userID, userName, gender, image, checkUserStatus(userID)));
             }
         } finally {
-            if (r != null) r.close();
-            if (p != null) p.close();
+            if (r != null) {
+                r.close();
+            }
+            if (p != null) {
+                p.close();
+            }
         }
         return list;
     }
-    private boolean checkUserStatus(int userID){
+
+    private boolean checkUserStatus(int userID) {
         List<ModelClient> clients = Service.getInstance(null).getListClient();
-        for(ModelClient c : clients){
-            if(c.getUser().getUserID() == userID){
+        for (ModelClient c : clients) {
+            if (c.getUser().getUserID() == userID) {
                 return true;
             }
         }
         return false;
     }
 
+    public void saveMessage(String sender, String recipient, String message) {
+        PreparedStatement p = null;
+
+        try {
+            // Tạo PreparedStatement để thêm tin nhắn vào bảng messages
+            p = con.prepareStatement(INSERT_MESSAGES);
+            p.setString(1, sender);
+            p.setString(2, recipient);
+            p.setString(3, message);
+
+            p.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (p != null) {
+                    p.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String generateRandomSecretKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] randomBytes = new byte[16];
+        secureRandom.nextBytes(randomBytes);
+        return java.util.Base64.getEncoder().encodeToString(randomBytes);
+    }
+
     // SQL Queries
+    private static final String INSERT_MESSAGES = "INSERT INTO messages (sender, recipient, message, timestamp) VALUES (?, ?, ?, NOW())";
     private static final String LOGIN = "SELECT UserID, user_account.UserName, Gender, ImageString FROM user JOIN user_account USING (UserID) WHERE user.UserNAME=BINARY(?) AND user.Password=BINARY(?) AND user_account.Status = '1'";
     private static final String SELECT_USER_ACCOUNT = "SELECT UserID, UserName, Gender, ImageString FROM user_account WHERE user_account.`Status`='1' AND UserID<>?";
     private static final String INSERT_USER = "INSERT INTO user (UserName, `Password`) VALUES (?,?)";
     private static final String INSERT_USER_ACCOUNT = "INSERT INTO user_account (UserID, UserName) VALUES (?,?)";
     private static final String CHECK_USER = "SELECT UserID FROM user WHERE UserName =? LIMIT 1";
-
-    // Instance
-    private final Connection con;
 }

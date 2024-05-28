@@ -1,9 +1,12 @@
 package com.component;
 
 import java.awt.Color;
+import java.time.LocalTime;
 import javax.swing.Icon;
 
 public class ChatRight extends javax.swing.JLayeredPane {
+    
+    private LocalTime time;
 
     public ChatRight() {
         initComponents();
@@ -37,7 +40,11 @@ public class ChatRight extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+        time = LocalTime.now();
+        if (time != null) {
+            String formattedTime = String.format("%02d:%02d", time.getHour(), time.getMinute());
+            txt.setTime(formattedTime); // Call the method to set the time in txt
+        }
     }
 
     @SuppressWarnings("unchecked")
