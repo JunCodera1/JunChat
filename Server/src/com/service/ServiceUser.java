@@ -7,7 +7,6 @@ import com.model.ModelLogin;
 import com.model.ModelMessage;
 import com.model.ModelRegister;
 import com.model.ModelUserAccount;
-import java.security.SecureRandom;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,8 +20,7 @@ public class ServiceUser {
     // Instance
     private final Connection con;
     private final EncryDecry encoder;
-    String secretKeyPassword = generateRandomSecretKey();
-    String passwordEncrypt;
+    String secretKeyPassword = "`Xb28If#-dDeIwr'7-UqbDwDn,F8D1d=PnG+0%?Py1*Pau+#~RoXqd:*[QF6y8U";
 
     public ServiceUser() {
         this.con = DatabaseConnection.getInstance().getConnection();
@@ -204,14 +202,6 @@ public class ServiceUser {
             }
         }
     }
-
-    private String generateRandomSecretKey() {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] randomBytes = new byte[16];
-        secureRandom.nextBytes(randomBytes);
-        return java.util.Base64.getEncoder().encodeToString(randomBytes);
-    }
-
     // SQL Queries
     private static final String INSERT_MESSAGES = "INSERT INTO messages (sender, recipient, message, timestamp) VALUES (?, ?, ?, NOW())";
     private static final String LOGIN = "SELECT UserID, user_account.UserName, Gender, ImageString FROM user JOIN user_account USING (UserID) WHERE user.UserNAME=BINARY(?) AND user.Password=BINARY(?) AND user_account.Status = '1'";

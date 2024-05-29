@@ -1,5 +1,6 @@
 package com.component;
 
+import com.model.ModelFileSender;
 import java.awt.Color;
 import java.time.LocalTime;
 import javax.swing.Icon;
@@ -22,8 +23,8 @@ public class ChatRight extends javax.swing.JLayeredPane {
         txt.seen();
     }
 
-    public void setImage(Icon... image) {
-        txt.setImage(true, image);
+    public void setImage(ModelFileSender fileSender) {
+        txt.setImage(true, fileSender);
     }
     
     public void setImage(String... image) {

@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ModelSendMessage {
-    
+
     public MessageType getMessageType() {
         return messageType;
     }
@@ -37,10 +37,20 @@ public class ModelSendMessage {
     public void setText(String text) {
         this.text = text;
     }
+
+    public ModelFileSender getFile() {
+        return file;
+    }
+
+    public void setFile(ModelFileSender file) {
+        this.file = file;
+    }
+
     private MessageType messageType;
     private int fromUserID;
     private int toUserID;
     private String text;
+    private ModelFileSender file;
 
     public ModelSendMessage() {
     }
@@ -52,15 +62,17 @@ public class ModelSendMessage {
         this.text = text;
     }
 
-    
-    
     public JSONObject toJsonObject() {
         try {
             JSONObject json = new JSONObject();
             json.put("messageType", messageType.getValue());
             json.put("fromUserID", fromUserID);
             json.put("toUserID", toUserID);
-            json.put("text", text);
+            if (messageType == MessageType.FILE || messageType == MessageType.IMAGE) {
+                json.put("text", file.getFileExtensions());
+            } else {
+                json.put("text", text);
+            }
             return json;
         } catch (JSONException e) {
             return null;

@@ -9,8 +9,6 @@ import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
@@ -33,7 +31,7 @@ public class ChatBody extends javax.swing.JPanel {
             item.setText(data.getText());
             item.setTime();
             body.add(item, "wrap, w 100::80%");
-        }else if(data.getMessageType() == MessageType.EMOJI){
+        } else if (data.getMessageType() == MessageType.EMOJI) {
             ChatLeft item = new ChatLeft();
             item.setEmoji(Emoji.getInstance().getEmoji(Integer.valueOf(data.getText())).getIcon());
             item.setTime();
@@ -59,13 +57,19 @@ public class ChatBody extends javax.swing.JPanel {
         if (data.getMessageType() == MessageType.TEXT) {
             ChatRight item = new ChatRight();
             item.setText(data.getText());
-            body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
-        }else if(data.getMessageType() == MessageType.EMOJI){
+            body.add(item, "wrap, al right, w 100::80%");
+        } else if (data.getMessageType() == MessageType.EMOJI) {
             ChatRight item = new ChatRight();
             item.setEmoji(Emoji.getInstance().getEmoji(Integer.valueOf(data.getText())).getIcon());
-            body.add(item, "wrap, al right, w 100::80%");
             item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
+        } else if (data.getMessageType() == MessageType.IMAGE) {
+            ChatRight item = new ChatRight();
+            item.setText("");
+            item.setImage(data.getFile());
+            item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
         }
         repaint();
         revalidate();

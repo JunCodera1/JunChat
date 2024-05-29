@@ -16,6 +16,8 @@ import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 import net.miginfocom.swing.MigLayout;
 
 public class PanelMore extends javax.swing.JPanel {
@@ -37,6 +40,7 @@ public class PanelMore extends javax.swing.JPanel {
     }
 
     private ModelUserAccount user;
+
     public PanelMore() {
         initComponents();
         init();
@@ -46,6 +50,7 @@ public class PanelMore extends javax.swing.JPanel {
         setLayout(new MigLayout("fillx"));
         panelHeader = new JPanel();
         panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.LINE_AXIS));
+        panelHeader.add(getbuttonImage());
         panelHeader.add(getButtonFile());
         panelHeader.add(getEmojiStyle1());
         panelHeader.add(getEmojiStyle2());
@@ -57,6 +62,43 @@ public class PanelMore extends javax.swing.JPanel {
         ch.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         ch.setVerticalScrollBar(new ScrollBar());
         add(ch, "w 100%, h 100%");
+    }
+
+    private JButton getbuttonImage() {
+        OptionButton cmd = new OptionButton();
+        cmd.setIcon(new ImageIcon(getClass().getResource("/com/icon/image.png")));
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser ch = new JFileChooser();
+                ch.setMultiSelectionEnabled(true);
+                ch.setFileFilter(new FileFilter() {
+                    @Override
+                    public boolean accept(File file) {
+                        return file.isDirectory() || isImageFile(file);
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Image Sending";
+                    }
+                });
+                int option = ch.showOpenDialog(Main.getFrames()[0]);
+                if (option == JFileChooser.APPROVE_OPTION) {
+                    File files[] = ch.getSelectedFiles();
+                    try {
+                        for (File file : files) {
+                            ModelSendMessage message = new ModelSendMessage(MessageType.IMAGE, Service.getInstance().getUser().getUserID(), user.getUserID(), "");
+                            Service.getInstance().addFile(file, message);
+                            PublicEvent.getInstance().getEventChat().sendMessage(message);
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        return cmd;
     }
 
     private JButton getButtonFile() {
@@ -158,6 +200,11 @@ public class PanelMore extends javax.swing.JPanel {
                 ((OptionButton) c).setSelected(false);
             }
         }
+    }
+
+    private boolean isImageFile(File file) {
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif");
     }
     private JPanel panelHeader;
     private JPanel panelDetail;

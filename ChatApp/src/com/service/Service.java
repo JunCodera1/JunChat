@@ -1,11 +1,15 @@
 package com.service;
 
 import com.event.PublicEvent;
+import com.model.ModelFileSender;
 import com.model.ModelReceiveMessage;
+import com.model.ModelSendMessage;
 import com.model.ModelUserAccount;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +21,7 @@ public class Service {
     private final int PORT_NUMBER = 9999;
     private final String IP = "localhost";
     private ModelUserAccount user;
+    private List<ModelFileSender> fileSender;
 
     public static Service getInstance() {
         if (instance == null) {
@@ -26,6 +31,7 @@ public class Service {
     }
 
     private Service() {
+        fileSender = new ArrayList<>();
     }
 
     public void startServer() {
@@ -69,6 +75,25 @@ public class Service {
             client.open();
         } catch (URISyntaxException e) {
             error(e);
+        }
+    }
+
+    public ModelFileSender addFile(File file, ModelSendMessage message) throws IOException {
+        ModelFileSender data = new ModelFileSender(file, client, message);
+        message.setFile(data);
+        fileSender.add(data);
+        // for send file one by one
+        if (fileSender.size() == 1) {
+            data.initSend();
+        }
+        return data;
+    }
+
+    public void fileSendFinish(ModelFileSender data) throws IOException {
+        fileSender.remove(data);
+        if (!fileSender.isEmpty()) {
+            //Start send new file when old file sending finish
+            fileSender.get(0).initSend();    
         }
     }
 

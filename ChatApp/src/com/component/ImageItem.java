@@ -1,5 +1,6 @@
 package com.component;
 
+import com.model.ModelFileSender;
 import com.swing.blurHash.BlurHash;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
@@ -9,6 +10,10 @@ public class ImageItem extends javax.swing.JLayeredPane {
 
     public ImageItem() {
         initComponents();
+    }
+    
+    public void setImage(Icon image, ModelFileSender fileSender) {
+        pic.setImage(image);
     }
 
     public void setImage(String image) {
