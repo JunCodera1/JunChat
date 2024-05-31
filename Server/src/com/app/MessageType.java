@@ -1,7 +1,8 @@
 package com.app;
 
+
 public enum MessageType {
-    TEXT(1), EMOJI(2), FILE(3);
+    TEXT(1), EMOJI(2), FILE(3), IMAGE(4);
     private final int value;
 
     public int getValue() {
@@ -17,8 +18,12 @@ public enum MessageType {
             return TEXT;
         }else if(value == 2){
             return EMOJI;
-        }else{
+        }
+        else if(value == 3){
             return FILE;
+        }
+        else{
+            return IMAGE;
         }
     }
 }

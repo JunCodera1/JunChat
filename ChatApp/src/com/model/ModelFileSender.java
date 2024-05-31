@@ -1,5 +1,6 @@
 package com.model;
 
+import com.event.EventFileSender;
 import com.model.ModelSendMessage;
 import com.service.Service;
 import io.socket.client.Ack;
@@ -79,12 +80,13 @@ public class ModelFileSender {
     }
 
     private ModelSendMessage message;
-    int fileID;
-    String fileExtensions;
-    File file;
-    long fileSize;
-    RandomAccessFile accFile;
-    Socket socket;
+    private int fileID;
+    private String fileExtensions;
+    private File file;
+    private long fileSize;
+    private RandomAccessFile accFile;
+    private Socket socket;
+    private EventFileSender event;
 
     public synchronized byte[] readFile() throws IOException {
         long filepointer = accFile.getFilePointer();
@@ -100,8 +102,7 @@ public class ModelFileSender {
     }
 
     public void initSend() throws IOException {
-        System.out.println("Init file to server and wait server response back");
-        socket.emit("send to user", message.toJsonObject(), new Ack() {
+        socket.emit("send_to_user", message.toJsonObject(), new Ack() {
             @Override
             public void call(Object... os) {
                 if (os.length > 0) {
@@ -119,6 +120,9 @@ public class ModelFileSender {
 
     public void startSend(int fileID) throws IOException {
         this.fileID = fileID;
+        if (event != null) {
+            event.onStartSending();
+        }
         sendingFile();
     }
 
@@ -140,10 +144,16 @@ public class ModelFileSender {
                     if (act) {
                         try {
                             if (!data.isFinish()) {
+                                if (event != null) {
+                                    event.onSending(getPercentage());
+                                }
                                 sendingFile();
                             } else {
                                 //File send finish
                                 Service.getInstance().fileSendFinish(ModelFileSender.this);
+                                if (event != null) {
+                                    event.onFinish();
+                                }
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -167,5 +177,9 @@ public class ModelFileSender {
 
     private String getExtensions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".", fileName.length()));
+    }
+
+    public void addEvent(EventFileSender event) {
+        this.event = event;
     }
 }

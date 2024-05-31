@@ -36,6 +36,12 @@ public class ChatBody extends javax.swing.JPanel {
             item.setEmoji(Emoji.getInstance().getEmoji(Integer.valueOf(data.getText())).getIcon());
             item.setTime();
             body.add(item, "wrap, w 100::80%");
+        } else if (data.getMessageType() == MessageType.IMAGE) {
+            ChatLeft item = new ChatLeft();
+            item.setText("");
+            item.setImage(data.getDataImage());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
         }
         repaint();
         revalidate();
@@ -70,6 +76,7 @@ public class ChatBody extends javax.swing.JPanel {
             item.setImage(data.getFile());
             item.setTime();
             body.add(item, "wrap, al right, w 100::80%");
+
         }
         repaint();
         revalidate();
@@ -80,16 +87,6 @@ public class ChatBody extends javax.swing.JPanel {
         ChatRight item = new ChatRight();
         item.setText(text);
         item.setFile(fileName, fileSize);
-        body.add(item, "wrap, al right, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
-    }
-
-    public void addItemRight(String text, String[] image) {
-        ChatRight item = new ChatRight();
-        item.setText(text);
-        item.setImage(image);
         body.add(item, "wrap, al right, w 100::80%");
         //  ::80% set max with 80%
         body.repaint();

@@ -2,6 +2,7 @@ package com.component;
 
 import com.event.PublicEvent;
 import com.model.ModelFileSender;
+import com.model.ModelReceiveImage;
 import com.swing.PictureBox;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -23,20 +24,18 @@ public class ChatImage extends javax.swing.JLayeredPane {
     public void addImage(ModelFileSender fileSender) {
         Icon image = new ImageIcon(fileSender.getFile().getAbsolutePath());
         ImageItem pic = new ImageItem();
-        pic.setPreferredSize(getAutoSize(image, 250, 250));
+        pic.setPreferredSize(getAutoSize(image, 200, 200));
         pic.setImage(image, fileSender);
         addEvent(pic, image);
         add(pic, "wrap");
     }
 
-    public void addImage(String... images) {
-        for (String image : images) {
-            ImageItem pic = new ImageItem();
-            pic.setPreferredSize(new Dimension(200, 200));  //for test update next
-            pic.setImage(image);
-            //addEvent(pic, image);
-            add(pic, "wrap");
-        }
+    public void addImage(ModelReceiveImage dataImage) {
+        ImageItem pic = new ImageItem();
+        pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));
+        pic.setImage(dataImage);
+        //  addEvent(pic, image);
+        add(pic, "wrap");;
     }
 
     private void addEvent(Component com, Icon image) {

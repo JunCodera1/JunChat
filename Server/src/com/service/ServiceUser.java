@@ -178,30 +178,6 @@ public class ServiceUser {
         }
         return false;
     }
-
-    public void saveMessage(String sender, String recipient, String message) {
-        PreparedStatement p = null;
-
-        try {
-            // Tạo PreparedStatement để thêm tin nhắn vào bảng messages
-            p = con.prepareStatement(INSERT_MESSAGES);
-            p.setString(1, sender);
-            p.setString(2, recipient);
-            p.setString(3, message);
-
-            p.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (p != null) {
-                    p.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     // SQL Queries
     private static final String INSERT_MESSAGES = "INSERT INTO messages (sender, recipient, message, timestamp) VALUES (?, ?, ?, NOW())";
     private static final String LOGIN = "SELECT UserID, user_account.UserName, Gender, ImageString FROM user JOIN user_account USING (UserID) WHERE user.UserNAME=BINARY(?) AND user.Password=BINARY(?) AND user_account.Status = '1'";

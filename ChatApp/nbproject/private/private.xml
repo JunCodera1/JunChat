@@ -12,12 +12,16 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ItemPeople.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/app/MessageType.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/form/Chat.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ChatLeft.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ChatRight.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/service/Service.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/model/ModelReceiveImage.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ChatItem.java</file>
             <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ChatBody.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/main/Main.java</file>
-            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/form/Login.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ChatImage.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ChatLeftWithProfile.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/component/ImageItem.java</file>
+            <file>file:/C:/Users/HP/Documents/NetBeansProjects/ChatApp/src/com/model/ModelReceiveMessage.java</file>
         </group>
     </open-files>
 </project-private>

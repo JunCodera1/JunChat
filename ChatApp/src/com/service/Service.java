@@ -82,7 +82,7 @@ public class Service {
         ModelFileSender data = new ModelFileSender(file, client, message);
         message.setFile(data);
         fileSender.add(data);
-        // for send file one by one
+        //  For send file one by one
         if (fileSender.size() == 1) {
             data.initSend();
         }
@@ -92,8 +92,8 @@ public class Service {
     public void fileSendFinish(ModelFileSender data) throws IOException {
         fileSender.remove(data);
         if (!fileSender.isEmpty()) {
-            //Start send new file when old file sending finish
-            fileSender.get(0).initSend();    
+            //  Start send new file when old file sending finish
+            fileSender.get(0).initSend();
         }
     }
 

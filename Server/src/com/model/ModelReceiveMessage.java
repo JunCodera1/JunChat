@@ -26,18 +26,26 @@ public class ModelReceiveMessage {
         this.text = text;
     }
 
+    public ModelReceiveImage getDataImage() {
+        return dataImage;
+    }
+
+    public void setDataImage(ModelReceiveImage dataImage) {
+        this.dataImage = dataImage;
+    }
+
     public ModelReceiveMessage() {
     }
 
-    public ModelReceiveMessage(int messageType, int fromUserID, String text) {
+    public ModelReceiveMessage(int messageType, int fromUserID, String text, ModelReceiveImage dataImage) {
         this.messageType = messageType;
         this.fromUserID = fromUserID;
         this.text = text;
+        this.dataImage = dataImage;
     }
     
-    
-
     private int messageType;
     private int fromUserID;
     private String text;
+    ModelReceiveImage dataImage;
 }

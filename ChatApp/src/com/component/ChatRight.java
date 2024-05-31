@@ -1,6 +1,7 @@
 package com.component;
 
 import com.model.ModelFileSender;
+import com.model.ModelReceiveImage;
 import java.awt.Color;
 import java.time.LocalTime;
 import javax.swing.Icon;
@@ -28,7 +29,7 @@ public class ChatRight extends javax.swing.JLayeredPane {
     }
     
     public void setImage(String... image) {
-        txt.setImage(true, image);
+        //txt.setImage(true, image);
     }
     
     public void setFile(String fileName, String fileSize){

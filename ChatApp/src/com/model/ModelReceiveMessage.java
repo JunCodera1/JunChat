@@ -30,9 +30,13 @@ public class ModelReceiveMessage {
         this.text = text;
     }
 
-    private MessageType messageType;
-    int fromUserID;
-    String text;
+    public ModelReceiveImage getDataImage() {
+        return dataImage;
+    }
+
+    public void setDataImage(ModelReceiveImage dataImage) {
+        this.dataImage = dataImage;
+    }
 
     public ModelReceiveMessage(Object json) {
         JSONObject obj = (JSONObject) json;
@@ -40,17 +44,18 @@ public class ModelReceiveMessage {
             messageType = MessageType.toMessageType(obj.getInt("messageType"));
             fromUserID = obj.getInt("fromUserID");
             text = obj.getString("text");
-        } catch (Exception e) {
+            if (!obj.isNull("dataImage")) {
+                dataImage = new ModelReceiveImage(obj.get("dataImage"));
+            }
+        } catch (JSONException e) {
             System.err.println(e);
         }
     }
 
-    public ModelReceiveMessage(int fromUserID, String text) {
-        this.fromUserID = fromUserID;
-        this.text = text;
-    }
-    
-    
+    private MessageType messageType;
+    private int fromUserID;
+    private String text;
+    private ModelReceiveImage dataImage;
 
     public JSONObject toJsonObject() {
         try {
@@ -58,6 +63,9 @@ public class ModelReceiveMessage {
             json.put("messageType", messageType.getValue());
             json.put("fromUserID", fromUserID);
             json.put("text", text);
+            if (dataImage != null) {
+                json.put("dataImage", dataImage.toJsonObject());
+            }
             return json;
         } catch (JSONException e) {
             return null;
