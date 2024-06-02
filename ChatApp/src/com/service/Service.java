@@ -20,8 +20,8 @@ public class Service {
 
     private static Service instance;
     private Socket client;
-    private final int PORT_NUMBER = 9999;
-    private final String IP = "localhost";
+    private final int PORT_NUMBER = 138;
+    private final String IP = "192.168.1.6";
     private ModelUserAccount user;
     private List<ModelFileSender> fileSender;
     private List<ModelFileReceiver> fileReceiver;

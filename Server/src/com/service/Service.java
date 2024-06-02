@@ -33,7 +33,7 @@ public class Service {
     private ServiceFile serviceFile;
     private List<ModelClient> listClient;
     private JTextArea textArea;
-    private final int PORT_NUMBER = 9999;
+    private final int PORT_NUMBER = 138;
     
     public static Service getInstance(JTextArea textArea) {
         if (instance == null) {
@@ -79,7 +79,10 @@ public class Service {
                     ar.sendAckData(true, login);
                     addClient(sioc, login);
                     userConnect(login.getUserID());
+                    textArea.append(t.getUserName() + " connected\n");
+                    
                 } else {
+                    textArea.append(t.getUserName() + "client disconnected\n");
                     ar.sendAckData(false);
                 }
             }
@@ -143,11 +146,14 @@ public class Service {
             }
         });
         server.addDisconnectListener(new DisconnectListener() {
-            @Override
             public void onDisconnect(SocketIOClient sioc) {
                 int userID = removeClient(sioc);
                 if (userID != 0) {
-                    //  removed
+                   ModelUserAccount user = getUserByID(userID);
+                    if (user != null) {
+                        // Thêm thông báo người dùng ngắt kết nối vào textArea
+                        textArea.append(user.getUserName() + " client disconnected\n");
+                    }
                     userDisconnect(userID);
                 }
             }
@@ -208,5 +214,14 @@ public class Service {
     
     public List<ModelClient> getListClient() {
         return listClient;
+    }
+    
+    private ModelUserAccount getUserByID(int userID) {
+        for (ModelClient c : listClient) {
+            if (c.getUser().getUserID() == userID) {
+                return c.getUser();
+            }
+        }
+        return null;
     }
 }
