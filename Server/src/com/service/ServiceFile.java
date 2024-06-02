@@ -4,6 +4,7 @@ import com.app.MessageType;
 import com.connection.DatabaseConnection;
 import com.model.ModelFile;
 import com.model.ModelFileReceiver;
+import com.model.ModelFileSender;
 import com.model.ModelPackageSender;
 import com.model.ModelReceiveImage;
 import com.model.ModelSendMessage;
@@ -26,6 +27,7 @@ public class ServiceFile {
     public ServiceFile() {
         this.con = DatabaseConnection.getInstance().getConnection();
         this.fileReceivers = new HashMap<>();
+        this.fileSenders = new HashMap<>();
     }
 
     public ModelFile addFileReceiver(String fileExtension) throws SQLException {
@@ -59,6 +61,38 @@ public class ServiceFile {
 
     public void initFile(ModelFile file, ModelSendMessage message) throws IOException {
         fileReceivers.put(file.getFileID(), new ModelFileReceiver(message, toFileObject(file)));
+    }
+
+    public ModelFile getFile(int fileID) throws SQLException {
+        PreparedStatement p = con.prepareStatement(GET_FILE_EXTENSION);
+        p.setInt(1, fileID);
+        ResultSet r = p.executeQuery();
+        r.first();
+        String fileExtension = r.getString(1);
+        ModelFile data = new ModelFile(fileID, fileExtension);
+        r.close();
+        p.close();
+        return data;
+    }
+
+    public synchronized ModelFile initFile(int fileID) throws IOException, SQLException {
+        ModelFile file;
+        if (!fileSenders.containsKey(fileID)) {
+            file = getFile(fileID);
+            fileSenders.put(fileID, new ModelFileSender(file, new File(PATH_FILE + fileID + file.getFileExtension())));
+        } else {
+            file = fileSenders.get(fileID).getData();
+        }
+        return file;
+    }
+
+    public byte[] getFileData(long currentLength, int fileID) throws IOException, SQLException {
+        initFile(fileID);
+        return fileSenders.get(fileID).read(currentLength);
+    }
+
+    public long getFileSize(int fileID) {
+        return fileSenders.get(fileID).getFileSize();
     }
 
     public void receiveFile(ModelPackageSender dataPackage) throws IOException {
@@ -118,10 +152,12 @@ public class ServiceFile {
 
     //  SQL
     private final String PATH_FILE = "server_data/";
-    private final String INSERT = "insert into files (FileExtension) values (?)";
-    private final String UPDATE_BLUR_HASH_DONE = "update files set BlurHash=?, `Status`='1' where FileID=? limit 1";
-    private final String UPDATE_DONE = "update files set `Status`='1' where FileID=? limit 1";
+    private final String INSERT = "INSERT INTO files (FileExtension) VALUES (?)";
+    private final String UPDATE_BLUR_HASH_DONE = "UPDATE files SET BlurHash=?, `Status`='1' WHERE FileID=? LIMIT 1";
+    private final String UPDATE_DONE = "UPDATE FILES SET `Status`='1' WHERE FileID=? LIMIT 1";
+    private final String GET_FILE_EXTENSION = "SELECT FileExtension FROM files WHERE FileID=? LIMIT 1";
     //  Instance
     private final Connection con;
     private final Map<Integer, ModelFileReceiver> fileReceivers;
+    private final Map<Integer, ModelFileSender> fileSenders;
 }

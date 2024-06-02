@@ -20,15 +20,14 @@ public class ModelClient {
         this.user = user;
     }
 
-    public ModelClient() {
-    }
-
     public ModelClient(SocketIOClient client, ModelUserAccount user) {
         this.client = client;
         this.user = user;
     }
-    
-    
-    SocketIOClient client;
-    ModelUserAccount user;
+
+    public ModelClient() {
+    }
+
+    private SocketIOClient client;
+    private ModelUserAccount user;
 }

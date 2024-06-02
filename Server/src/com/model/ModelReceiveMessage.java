@@ -34,18 +34,18 @@ public class ModelReceiveMessage {
         this.dataImage = dataImage;
     }
 
-    public ModelReceiveMessage() {
-    }
-
     public ModelReceiveMessage(int messageType, int fromUserID, String text, ModelReceiveImage dataImage) {
         this.messageType = messageType;
         this.fromUserID = fromUserID;
         this.text = text;
         this.dataImage = dataImage;
     }
-    
+
+    public ModelReceiveMessage() {
+    }
+
     private int messageType;
     private int fromUserID;
     private String text;
-    ModelReceiveImage dataImage;
+    private ModelReceiveImage dataImage;
 }

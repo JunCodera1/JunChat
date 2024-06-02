@@ -31,10 +31,10 @@ public class ModelPackageSender {
         this.data = data;
         this.finish = finish;
     }
-    
+
     public ModelPackageSender() {
     }
-    
+
     private int fileID;
     private byte[] data;
     private boolean finish;

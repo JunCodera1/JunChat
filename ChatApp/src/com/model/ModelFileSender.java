@@ -1,7 +1,6 @@
 package com.model;
 
 import com.event.EventFileSender;
-import com.model.ModelSendMessage;
 import com.service.Service;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
@@ -67,9 +66,6 @@ public class ModelFileSender {
         this.socket = socket;
     }
 
-    public ModelFileSender() {
-    }
-
     public ModelFileSender(File file, Socket socket, ModelSendMessage message) throws IOException {
         accFile = new RandomAccessFile(file, "r");
         this.file = file;
@@ -77,6 +73,9 @@ public class ModelFileSender {
         this.message = message;
         fileExtensions = getExtensions(file.getName());
         fileSize = accFile.length();
+    }
+
+    public ModelFileSender() {
     }
 
     private ModelSendMessage message;
@@ -114,7 +113,6 @@ public class ModelFileSender {
                     }
                 }
             }
-
         });
     }
 
@@ -134,7 +132,8 @@ public class ModelFileSender {
             data.setData(bytes);
             data.setFinish(false);
         } else {
-
+            data.setFinish(true);
+            close();
         }
         socket.emit("send_file", data.toJsonObject(), new Ack() {
             @Override
@@ -149,7 +148,7 @@ public class ModelFileSender {
                                 }
                                 sendingFile();
                             } else {
-                                //File send finish
+                                //  File send finish
                                 Service.getInstance().fileSendFinish(ModelFileSender.this);
                                 if (event != null) {
                                     event.onFinish();
@@ -166,8 +165,8 @@ public class ModelFileSender {
 
     public double getPercentage() throws IOException {
         double percentage;
-        long filepointer = accFile.getFilePointer();
-        percentage = filepointer * 100 / fileSize;
+        long filePointer = accFile.getFilePointer();
+        percentage = filePointer * 100 / fileSize;
         return percentage;
     }
 
@@ -176,7 +175,7 @@ public class ModelFileSender {
     }
 
     private String getExtensions(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".", fileName.length()));
+        return fileName.substring(fileName.lastIndexOf("."), fileName.length());
     }
 
     public void addEvent(EventFileSender event) {

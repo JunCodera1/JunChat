@@ -16,6 +16,7 @@ import com.model.ModelPackageSender;
 import com.model.ModelReceiveImage;
 import com.model.ModelReceiveMessage;
 import com.model.ModelRegister;
+import com.model.ModelRequestFile;
 import com.model.ModelSendMessage;
 import com.model.ModelUserAccount;
 import java.io.IOException;
@@ -25,30 +26,29 @@ import java.util.List;
 import javax.swing.JTextArea;
 
 public class Service {
-
+    
     private static Service instance;
     private SocketIOServer server;
     private ServiceUser serviceUser;
     private ServiceFile serviceFile;
     private List<ModelClient> listClient;
-    private int numOfClient = 1;
     private JTextArea textArea;
     private final int PORT_NUMBER = 9999;
-
+    
     public static Service getInstance(JTextArea textArea) {
         if (instance == null) {
             instance = new Service(textArea);
         }
         return instance;
     }
-
+    
     private Service(JTextArea textArea) {
         this.textArea = textArea;
         serviceUser = new ServiceUser();
         serviceFile = new ServiceFile();
         listClient = new ArrayList<>();
     }
-
+    
     public void startServer() {
         Configuration config = new Configuration();
         config.setPort(PORT_NUMBER);
@@ -56,8 +56,7 @@ public class Service {
         server.addConnectListener(new ConnectListener() {
             @Override
             public void onConnect(SocketIOClient sioc) {
-                textArea.append(numOfClient + " client connected\n");
-                numOfClient++;
+                textArea.append("One client connected\n");
             }
         });
         server.addEventListener("register", ModelRegister.class, new DataListener<ModelRegister>() {
@@ -114,13 +113,32 @@ public class Service {
                         ModelSendMessage message = serviceFile.closeFile(dataImage);
                         //  Send to client 'message'
                         sendTempFileToClient(message, dataImage);
-
+                        
                     } else {
                         ar.sendAckData(true);
                     }
                 } catch (IOException | SQLException e) {
                     ar.sendAckData(false);
                     e.printStackTrace();
+                }
+            }
+        });
+        server.addEventListener("get_file", Integer.class, new DataListener<Integer>() {
+            @Override
+            public void onData(SocketIOClient sioc, Integer t, AckRequest ar) throws Exception {
+                ModelFile file = serviceFile.initFile(t);
+                long fileSize = serviceFile.getFileSize(t);
+                ar.sendAckData(file.getFileExtension(), fileSize);
+            }
+        });
+        server.addEventListener("request_file", ModelRequestFile.class, new DataListener<ModelRequestFile>() {
+            @Override
+            public void onData(SocketIOClient sioc, ModelRequestFile t, AckRequest ar) throws Exception {
+                byte[] data = serviceFile.getFileData(t.getCurrentLength(), t.getFileID());
+                if (data != null) {
+                    ar.sendAckData(data);
+                } else {
+                    ar.sendAckData();
                 }
             }
         });
@@ -137,19 +155,19 @@ public class Service {
         server.start();
         textArea.append("Server has Start on port : " + PORT_NUMBER + "\n");
     }
-
+    
     private void userConnect(int userID) {
         server.getBroadcastOperations().sendEvent("user_status", userID, true);
     }
-
+    
     private void userDisconnect(int userID) {
         server.getBroadcastOperations().sendEvent("user_status", userID, false);
     }
-
+    
     private void addClient(SocketIOClient client, ModelUserAccount user) {
         listClient.add(new ModelClient(client, user));
     }
-
+    
     private void sendToClient(ModelSendMessage data, AckRequest ar) {
         if (data.getMessageType() == MessageType.IMAGE.getValue() || data.getMessageType() == MessageType.FILE.getValue()) {
             try {
@@ -168,7 +186,7 @@ public class Service {
             }
         }
     }
-
+    
     private void sendTempFileToClient(ModelSendMessage data, ModelReceiveImage dataImage) {
         for (ModelClient c : listClient) {
             if (c.getUser().getUserID() == data.getToUserID()) {
@@ -177,7 +195,7 @@ public class Service {
             }
         }
     }
-
+    
     public int removeClient(SocketIOClient client) {
         for (ModelClient d : listClient) {
             if (d.getClient() == client) {
@@ -187,7 +205,7 @@ public class Service {
         }
         return 0;
     }
-
+    
     public List<ModelClient> getListClient() {
         return listClient;
     }

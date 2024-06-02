@@ -46,21 +46,21 @@ public class ModelSendMessage {
         this.file = file;
     }
 
-    private MessageType messageType;
-    private int fromUserID;
-    private int toUserID;
-    private String text;
-    private ModelFileSender file;
-
-    public ModelSendMessage() {
-    }
-
     public ModelSendMessage(MessageType messageType, int fromUserID, int toUserID, String text) {
         this.messageType = messageType;
         this.fromUserID = fromUserID;
         this.toUserID = toUserID;
         this.text = text;
     }
+
+    public ModelSendMessage() {
+    }
+
+    private MessageType messageType;
+    private int fromUserID;
+    private int toUserID;
+    private String text;
+    private ModelFileSender file;
 
     public JSONObject toJsonObject() {
         try {

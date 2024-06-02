@@ -3,7 +3,6 @@ package com.component;
 import com.event.PublicEvent;
 import com.model.ModelFileSender;
 import com.model.ModelReceiveImage;
-import com.swing.PictureBox;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -35,7 +34,7 @@ public class ChatImage extends javax.swing.JLayeredPane {
         pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));
         pic.setImage(dataImage);
         //  addEvent(pic, image);
-        add(pic, "wrap");;
+        add(pic, "wrap");
     }
 
     private void addEvent(Component com, Icon image) {

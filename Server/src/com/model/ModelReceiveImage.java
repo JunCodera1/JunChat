@@ -34,15 +34,16 @@ public class ModelReceiveImage {
         this.height = height;
     }
 
-    public ModelReceiveImage() {
-    }
-
     public ModelReceiveImage(int fileID, String image, int width, int height) {
         this.fileID = fileID;
         this.image = image;
         this.width = width;
         this.height = height;
     }
+
+    public ModelReceiveImage() {
+    }
+
     private int fileID;
     private String image;
     private int width;
