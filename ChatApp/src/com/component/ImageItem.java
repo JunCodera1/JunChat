@@ -9,8 +9,11 @@ import com.swing.blurHash.BlurHash;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class ImageItem extends javax.swing.JLayeredPane {
 
@@ -38,35 +41,71 @@ public class ImageItem extends javax.swing.JLayeredPane {
     }
 
     public void setImage(ModelReceiveImage dataImage) {
-        int width = dataImage.getWidth();
-        int height = dataImage.getHeight();
-        int[] data = BlurHash.decode(dataImage.getImage(), width, height, 1);
+    if (dataImage == null) {
+        System.err.println("dataImage bị null");
+        return;
+    }
+
+    int width = dataImage.getWidth();
+    int height = dataImage.getHeight();
+    String blurHash = dataImage.getImage();
+
+    try {
+        // Giải mã ảnh từ BlurHash
+        int[] data = BlurHash.decode(blurHash, width, height, 1);
+
+        // Kiểm tra dữ liệu giải mã
+        if (data == null || data.length != width * height) {
+            System.err.println("Lỗi giải mã dữ liệu từ BlurHash. Kết quả giải mã bị null hoặc kích thước không khớp.");
+            return;
+        }
+
+        // In ra một vài giá trị của data để kiểm tra
+        System.out.println("Dữ liệu giải mã: " + Arrays.toString(Arrays.copyOf(data, Math.min(data.length, 10))));
+
+        // Tạo BufferedImage từ dữ liệu giải mã
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         img.setRGB(0, 0, width, height, data, 0, width);
+
+        // Tạo Icon từ BufferedImage
         Icon icon = new ImageIcon(img);
-        pic.setImage(icon);
-        try {
-            Service.getInstance().addFileReceiver(dataImage.getFileID(), new EventFileReceiver() {
-                @Override
-                public void onReceiving(double percentage) {
-                    progress.setValue((int) percentage);
-                }
 
-                @Override
-                public void onStartReceiving() {
+        // Cập nhật hình ảnh trong luồng UI
+        SwingUtilities.invokeLater(() -> {
+            pic.setImage(icon);
+            System.out.println("Hình ảnh ban đầu đã được cập nhật");
+        });
 
-                }
+        // Thiết lập nhận file
+        Service.getInstance().addFileReceiver(dataImage.getFileID(), new EventFileReceiver() {
+            @Override
+            public void onReceiving(double percentage) {
+                SwingUtilities.invokeLater(() -> progress.setValue((int) percentage));
+            }
 
-                @Override
-                public void onFinish(File file) {
+            @Override
+            public void onStartReceiving() {
+                // Có thể thêm xử lý khi bắt đầu nhận nếu cần
+            }
+
+            @Override
+            public void onFinish(File file) {
+                SwingUtilities.invokeLater(() -> {
                     progress.setVisible(false);
                     pic.setImage(new ImageIcon(file.getAbsolutePath()));
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                    System.out.println("Hình ảnh đã được cập nhật từ file");
+                });
+            }
+        });
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Lỗi khi giải mã hoặc nhận file: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
+}
+
+
+
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -9,6 +9,9 @@ import com.service.Service;
 import com.swing.ComponentResizer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -21,18 +24,22 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void init() {
-        setIconImage(new ImageIcon(getClass().getResource("/com/icon/icon.png")).getImage());
-        ComponentResizer com = new ComponentResizer();
-        com.registerComponent(this);
-        com.setMinimumSize(new Dimension(900, 500));
-        com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
-        com.setSnapSize(new Dimension(10, 10));
-        login.setVisible(true);
-        loading.setVisible(false);
-        vIew_Image.setVisible(false);
-        home.setVisible(false);
-        initEvent();
-        Service.getInstance().startServer();
+        try {
+            setIconImage(new ImageIcon(getClass().getResource("/com/icon/icon.png")).getImage());
+            ComponentResizer com = new ComponentResizer();
+            com.registerComponent(this);
+            com.setMinimumSize(new Dimension(900, 500));
+            com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
+            com.setSnapSize(new Dimension(10, 10));
+            login.setVisible(true);
+            loading.setVisible(false);
+            vIew_Image.setVisible(false);
+            home.setVisible(false);
+            initEvent();
+            Service.getInstance().startServer();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void initEvent() {
@@ -44,9 +51,13 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public void initChat() {
-                home.setVisible(true);
-                login.setVisible(false);
-                Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
+                try {
+                    home.setVisible(true);
+                    login.setVisible(false);
+                    Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             @Override
@@ -57,7 +68,8 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void updateUser(ModelUserAccount user) {
                 home.updateUser(user);
-            } 
+            }
+
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override

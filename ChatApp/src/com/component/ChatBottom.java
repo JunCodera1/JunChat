@@ -14,6 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -50,8 +53,12 @@ public class ChatBottom extends javax.swing.JPanel {
             public void keyTyped(KeyEvent ke) {
                 refresh();
                 if (ke.getKeyChar() == 10 && ke.isControlDown()) {
-                    // user press control + enter
-                    eventSend(txt);
+                    try {
+                        // user press control + enter
+                        eventSend(txt);
+                    } catch (UnknownHostException ex) {
+                        Logger.getLogger(ChatBottom.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -76,7 +83,11 @@ public class ChatBottom extends javax.swing.JPanel {
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                eventSend(txt);
+                try {
+                    eventSend(txt);
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(ChatBottom.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         JButton cmdMore = new JButton();
@@ -108,7 +119,7 @@ public class ChatBottom extends javax.swing.JPanel {
         add(panelMore, "dock south,h 0!"); // set height 0
     }
 
-    private void eventSend(JIMSendTextPane txt) {
+    private void eventSend(JIMSendTextPane txt) throws UnknownHostException {
         String text = txt.getText().trim();
         if (!text.equals("")) {
             ModelSendMessage message = new ModelSendMessage(MessageType.TEXT ,Service.getInstance().getUser().getUserID(), user.getUserID(), text);
@@ -122,7 +133,7 @@ public class ChatBottom extends javax.swing.JPanel {
         }
     }
 
-    private void send(ModelSendMessage data) {
+    private void send(ModelSendMessage data) throws UnknownHostException {
         Service.getInstance().getClient().emit("send_to_user", data.toJsonObject());
     }
 

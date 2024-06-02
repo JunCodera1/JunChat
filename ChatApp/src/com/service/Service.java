@@ -12,7 +12,9 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,23 +23,24 @@ public class Service {
     private static Service instance;
     private Socket client;
     private final int PORT_NUMBER = 138;
-    private final String IP = "192.168.1.6";
+    private final String IP;
     private ModelUserAccount user;
     private List<ModelFileSender> fileSender;
     private List<ModelFileReceiver> fileReceiver;
 
-    public static Service getInstance() {
+    // Constructor
+    private Service() throws UnknownHostException {
+        InetAddress localHost = InetAddress.getLocalHost();
+        this.IP = localHost.getHostAddress();
+    }
+
+    // Singleton pattern
+    public static Service getInstance() throws UnknownHostException {
         if (instance == null) {
             instance = new Service();
         }
         return instance;
     }
-
-    private Service() {
-        fileSender = new ArrayList<>();
-        fileReceiver = new ArrayList<>();
-    }
-
     public void startServer() {
         try {
             client = IO.socket("http://" + IP + ":" + PORT_NUMBER);

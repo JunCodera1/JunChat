@@ -18,6 +18,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -166,15 +169,19 @@ public class PanelMore extends javax.swing.JPanel {
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ModelSendMessage message = new ModelSendMessage(MessageType.EMOJI, Service.getInstance().getUser().getUserID(), user.getUserID(), data.getId() + "");
-                sendMessage(message);
-                PublicEvent.getInstance().getEventChat().sendMessage(message);
+                try {
+                    ModelSendMessage message = new ModelSendMessage(MessageType.EMOJI, Service.getInstance().getUser().getUserID(), user.getUserID(), data.getId() + "");
+                    sendMessage(message);
+                    PublicEvent.getInstance().getEventChat().sendMessage(message);
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(PanelMore.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         return cmd;
     }
 
-    private void sendMessage(ModelSendMessage data) {
+    private void sendMessage(ModelSendMessage data) throws UnknownHostException {
         Service.getInstance().getClient().emit("send_to_user", data.toJsonObject());
     }
 
