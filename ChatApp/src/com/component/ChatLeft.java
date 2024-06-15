@@ -1,7 +1,10 @@
 package com.component;
 
+import com.model.ModelFileSender;
+import com.model.ModelReceiveFile;
 import com.model.ModelReceiveImage;
 import java.awt.Color;
+import java.io.IOException;
 import java.time.LocalTime;
 import javax.swing.Icon;
 
@@ -25,12 +28,12 @@ public class ChatLeft extends javax.swing.JLayeredPane {
 //        txt.setImage(false, image);
     }
     
-    public void setImage(ModelReceiveImage dataImage) {
+    public void setImage(ModelReceiveImage dataImage) throws IOException {
         txt.setImage(false, dataImage);
     }
 
-    public void setFile(String fileName, String fileSize){
-        txt.setFile(fileName, fileSize);
+    public void setFile(ModelReceiveFile file) throws IOException{
+        txt.setFile(true , file);
     }
     
     public void setEmoji(Icon icon){

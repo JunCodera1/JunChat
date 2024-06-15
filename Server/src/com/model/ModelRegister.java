@@ -22,6 +22,7 @@ public class ModelRegister {
         this.userName = userName;
         this.password = password;
     }
+    
 
     public ModelRegister() {
     }

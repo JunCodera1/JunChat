@@ -26,7 +26,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class ChatBottom extends javax.swing.JPanel {
 
-    public ModelUserAccount getUser() {
+     public ModelUserAccount getUser() {
         return user;
     }
 
@@ -50,11 +50,11 @@ public class ChatBottom extends javax.swing.JPanel {
         JIMSendTextPane txt = new JIMSendTextPane();
         txt.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent ke) {
+            public void keyPressed(KeyEvent ke) {
                 refresh();
-                if (ke.getKeyChar() == 10 && ke.isControlDown()) {
+                if (ke.getKeyChar() == KeyEvent.VK_ENTER) {
                     try {
-                        // user press control + enter
+                        // user press enter
                         eventSend(txt);
                     } catch (UnknownHostException ex) {
                         Logger.getLogger(ChatBottom.class.getName()).log(Level.SEVERE, null, ex);

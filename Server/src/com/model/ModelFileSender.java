@@ -56,7 +56,7 @@ public class ModelFileSender {
     public byte[] read(long currentLength) throws IOException {
         accFile.seek(currentLength);
         if (currentLength != fileSize) {
-            int max = 2000;
+            int max = 8000;
             long length = currentLength + max >= fileSize ? fileSize - currentLength : max;
             byte[] b = new byte[(int) length];
             accFile.read(b);

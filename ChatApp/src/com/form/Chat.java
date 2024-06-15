@@ -8,6 +8,9 @@ import com.event.PublicEvent;
 import com.model.ModelReceiveMessage;
 import com.model.ModelSendMessage;
 import com.model.ModelUserAccount;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.miginfocom.swing.MigLayout;
 
 public class Chat extends javax.swing.JPanel {
@@ -35,7 +38,11 @@ public class Chat extends javax.swing.JPanel {
             @Override
             public void receiveMessage(ModelReceiveMessage data) {
                 if (chatTitle.getUser().getUserID() == data.getFromUserID()) {
-                    chatBody.addItemLeft(data);
+                    try {
+                        chatBody.addItemLeft(data);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });

@@ -37,6 +37,14 @@ public class ModelReceiveMessage {
     public void setDataImage(ModelReceiveImage dataImage) {
         this.dataImage = dataImage;
     }
+    
+    public ModelReceiveFile getDataFile() {
+        return dataFile;
+    }
+
+    public void setDataFile(ModelReceiveFile dataFile) {
+        this.dataFile = dataFile;
+    }
 
     public ModelReceiveMessage(Object json) {
         JSONObject obj = (JSONObject) json;
@@ -56,6 +64,7 @@ public class ModelReceiveMessage {
     private int fromUserID;
     private String text;
     private ModelReceiveImage dataImage;
+    private ModelReceiveFile dataFile;
 
     public JSONObject toJsonObject() {
         try {
@@ -65,6 +74,9 @@ public class ModelReceiveMessage {
             json.put("text", text);
             if (dataImage != null) {
                 json.put("dataImage", dataImage.toJsonObject());
+            }
+            if (dataFile != null){
+                json.put("dataFile", dataFile.toJsonObject());
             }
             return json;
         } catch (JSONException e) {

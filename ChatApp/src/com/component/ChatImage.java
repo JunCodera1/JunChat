@@ -8,6 +8,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -29,7 +30,7 @@ public class ChatImage extends javax.swing.JLayeredPane {
         add(pic, "wrap");
     }
 
-    public void addImage(ModelReceiveImage dataImage) {
+    public void addImage(ModelReceiveImage dataImage) throws IOException {
         ImageItem pic = new ImageItem();
         pic.setPreferredSize(new Dimension(dataImage.getWidth(), dataImage.getHeight()));
         pic.setImage(dataImage);

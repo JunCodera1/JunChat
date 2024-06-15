@@ -1,4 +1,5 @@
 package com.swing.blurHash;
+
 import java.awt.image.BufferedImage;
 
 public class BlurHash {
@@ -28,24 +29,10 @@ public class BlurHash {
         double[][] factors = new double[componentX * componentY][3];
         for (int j = 0; j < componentY; j++) {
             for (int i = 0; i < componentX; i++) {
-                double normalisation = (i == 0 && j == 0) ? 1 : 2;
-                double r = 0, g = 0, b = 0;
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        double basis = normalisation
-                                * Math.cos((Math.PI * i * x) / width)
-                                * Math.cos((Math.PI * j * y) / height);
-                        int pixel = pixels[y * width + x];
-                        r += basis * SRGB.toLinear((pixel >> 16) & 0xff);
-                        g += basis * SRGB.toLinear((pixel >> 8) & 0xff);
-                        b += basis * SRGB.toLinear(pixel & 0xff);
-                    }
-                }
-                double scale = 1.0 / (width * height);
-                int index = j * componentX + i;
-                factors[index][0] = r * scale;
-                factors[index][1] = g * scale;
-                factors[index][2] = b * scale;
+                double normalisation = i == 0 && j == 0 ? 1 : 2;
+                Util.applyBasisFunction(pixels, width, height,
+                        normalisation, i, j,
+                        factors, j * componentX + i);
             }
         }
 
@@ -117,8 +104,8 @@ public class BlurHash {
                 double r = 0, g = 0, b = 0;
                 for (int y = 0; y < sizeY; y++) {
                     for (int x = 0; x < sizeX; x++) {
-                        double basic = Math.cos(Math.PI * x * i / width) *
-                                Math.cos(Math.PI * y * j / height);
+                        double basic = Math.cos(Math.PI * x * i / width)
+                                * Math.cos(Math.PI * y * j / height);
                         double[] color = colors[x + y * sizeX];
                         r += (color[0] * basic);
                         g += (color[1] * basic);
@@ -126,8 +113,8 @@ public class BlurHash {
                     }
                 }
 
-                pixels[pos++] = 255 << 24 | (SRGB.fromLinear(r) & 255) << 16 |
-                        (SRGB.fromLinear(g) & 255) << 8 | (SRGB.fromLinear(b) & 255);
+                pixels[pos++] = 255 << 24 | (SRGB.fromLinear(r) & 255) << 16
+                        | (SRGB.fromLinear(g) & 255) << 8 | (SRGB.fromLinear(b) & 255);
             }
         }
 

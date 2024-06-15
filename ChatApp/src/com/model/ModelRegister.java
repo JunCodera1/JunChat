@@ -31,6 +31,7 @@ public class ModelRegister {
 
     private String userName;
     private String password;
+    private String email;
 
     public JSONObject toJsonObject() {
         try {

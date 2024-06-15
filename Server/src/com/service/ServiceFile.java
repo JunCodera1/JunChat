@@ -60,6 +60,7 @@ public class ServiceFile {
     }
 
     public void initFile(ModelFile file, ModelSendMessage message) throws IOException {
+        System.out.println("Initializing file receiver for file ID: " + file.getFileID());
         fileReceivers.put(file.getFileID(), new ModelFileReceiver(message, toFileObject(file)));
     }
 
@@ -78,6 +79,7 @@ public class ServiceFile {
     public synchronized ModelFile initFile(int fileID) throws IOException, SQLException {
         ModelFile file;
         if (!fileSenders.containsKey(fileID)) {
+            System.out.println("Initializing file sender for file ID: " + fileID);
             file = getFile(fileID);
             fileSenders.put(fileID, new ModelFileSender(file, new File(PATH_FILE + fileID + file.getFileExtension())));
         } else {
@@ -87,6 +89,7 @@ public class ServiceFile {
     }
 
     public byte[] getFileData(long currentLength, int fileID) throws IOException, SQLException {
+        System.out.println("Getting file data for file ID: " + fileID + ", current length: " + currentLength);
         initFile(fileID);
         return fileSenders.get(fileID).read(currentLength);
     }
@@ -96,9 +99,11 @@ public class ServiceFile {
     }
 
     public void receiveFile(ModelPackageSender dataPackage) throws IOException {
+        System.out.println("Receiving file data package for file ID: " + dataPackage.getFileID());
         if (!dataPackage.isFinish()) {
             fileReceivers.get(dataPackage.getFileID()).writeFile(dataPackage.getData());
         } else {
+            System.out.println("File receiving finished for file ID: " + dataPackage.getFileID());
             fileReceivers.get(dataPackage.getFileID()).close();
         }
     }
@@ -106,8 +111,7 @@ public class ServiceFile {
     public ModelSendMessage closeFile(ModelReceiveImage dataImage) throws IOException, SQLException {
         ModelFileReceiver file = fileReceivers.get(dataImage.getFileID());
         if (file.getMessage().getMessageType() == MessageType.IMAGE.getValue()) {
-            //  Image file
-            //  So create blurhash image string
+            System.out.println("Creating blurhash for image file ID: " + dataImage.getFileID());
             file.getMessage().setText("");
             String blurhash = convertFileToBlurHash(file.getFile(), dataImage);
             updateBlurHashDone(dataImage.getFileID(), blurhash);
@@ -115,14 +119,12 @@ public class ServiceFile {
             updateDone(dataImage.getFileID());
         }
         fileReceivers.remove(dataImage.getFileID());
-        //  Get message to send to target client when file receive finish
         return file.getMessage();
     }
 
     private String convertFileToBlurHash(File file, ModelReceiveImage dataImage) throws IOException {
         BufferedImage img = ImageIO.read(file);
         Dimension size = getAutoSize(new Dimension(img.getWidth(), img.getHeight()), new Dimension(200, 200));
-        //  Convert image to small size
         BufferedImage newImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
         g2.drawImage(img, 0, 0, size.width, size.height, null);
@@ -152,10 +154,10 @@ public class ServiceFile {
 
     //  SQL
     private final String PATH_FILE = "server_data/";
-    private final String INSERT = "INSERT INTO files (FileExtension) VALUES (?)";
-    private final String UPDATE_BLUR_HASH_DONE = "UPDATE files SET BlurHash=?, `Status`='1' WHERE FileID=? LIMIT 1";
-    private final String UPDATE_DONE = "UPDATE FILES SET `Status`='1' WHERE FileID=? LIMIT 1";
-    private final String GET_FILE_EXTENSION = "SELECT FileExtension FROM files WHERE FileID=? LIMIT 1";
+    private final String INSERT = "INSERT INTO images (FileExtension) VALUES (?)";
+    private final String UPDATE_BLUR_HASH_DONE = "UPDATE images SET BlurHash=?, `Status`='1' WHERE FileID=? LIMIT 1";
+    private final String UPDATE_DONE = "UPDATE images SET `Status`='1' WHERE FileID=? LIMIT 1";
+    private final String GET_FILE_EXTENSION = "SELECT FileExtension FROM images WHERE FileID=? LIMIT 1";
     //  Instance
     private final Connection con;
     private final Map<Integer, ModelFileReceiver> fileReceivers;

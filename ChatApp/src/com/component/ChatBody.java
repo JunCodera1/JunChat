@@ -2,6 +2,7 @@ package com.component;
 
 import com.app.MessageType;
 import com.emoji.Emoji;
+import com.model.ModelFileSender;
 import com.model.ModelReceiveMessage;
 import com.model.ModelSendMessage;
 import com.swing.ScrollBar;
@@ -9,6 +10,7 @@ import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.io.IOException;
 import javax.swing.JScrollBar;
 import net.miginfocom.swing.MigLayout;
 
@@ -25,7 +27,7 @@ public class ChatBody extends javax.swing.JPanel {
         sp.getVerticalScrollBar().setBackground(Color.WHITE);
     }
 
-    public void addItemLeft(ModelReceiveMessage data) {
+    public void addItemLeft(ModelReceiveMessage data) throws IOException {
         if (data.getMessageType() == MessageType.TEXT) {
             ChatLeft item = new ChatLeft();
             item.setText(data.getText());
@@ -43,14 +45,21 @@ public class ChatBody extends javax.swing.JPanel {
             item.setTime();
             body.add(item, "wrap, w 100::80%");
         }
+        else if(data.getMessageType() == MessageType.FILE){
+            ChatLeft item = new ChatLeft();
+            item.setText("");
+            item.setFile(data.getDataFile());
+            item.setTime();
+            body.add(item, "wrap, w 100::80%");
+        }
         repaint();
         revalidate();
     }
 
-    public void addItemFile(String text, String user, String fileName, String fileSize) {
+    public void addItemFile(String text, String user, ModelFileSender file) {
         ChatLeftWithProfile item = new ChatLeftWithProfile();
         item.setText(text);
-        item.setFile(fileName, fileSize);
+        item.setFile(file);
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100::80%");
@@ -76,17 +85,22 @@ public class ChatBody extends javax.swing.JPanel {
             item.setImage(data.getFile());
             item.setTime();
             body.add(item, "wrap, al right, w 100::80%");
-
+        } else if (data.getMessageType() == MessageType.FILE){
+            ChatRight item = new ChatRight();
+            item.setText("");
+            item.setFile(data.getFile());
+            item.setTime();
+            body.add(item, "wrap, al right, w 100::80%");
         }
         repaint();
         revalidate();
         scrollToBottom();
     }
 
-    public void addItemFileRight(String text, String fileName, String fileSize) {
+    public void addItemFileRight(ModelFileSender file) {
         ChatRight item = new ChatRight();
-        item.setText(text);
-        item.setFile(fileName, fileSize);
+        item.setText("");
+        item.setFile(file);
         body.add(item, "wrap, al right, w 100::80%");
         //  ::80% set max with 80%
         body.repaint();

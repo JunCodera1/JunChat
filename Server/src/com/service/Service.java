@@ -31,6 +31,7 @@ public class Service {
     private SocketIOServer server;
     private ServiceUser serviceUser;
     private ServiceFile serviceFile;
+    private ServiceChatHistory serviceChatHistory;
     private List<ModelClient> listClient;
     private JTextArea textArea;
     private final int PORT_NUMBER = 138;
@@ -46,6 +47,7 @@ public class Service {
         this.textArea = textArea;
         serviceUser = new ServiceUser();
         serviceFile = new ServiceFile();
+        serviceChatHistory = new ServiceChatHistory(); 
         listClient = new ArrayList<>();
     }
     
@@ -98,6 +100,11 @@ public class Service {
                 }
             }
         });
+        server.addEventListener("get_chat_history", ModelUserAccount.class, new DataListener<ModelUserAccount>() {
+            @Override
+            public void onData(SocketIOClient sioc, ModelUserAccount t, AckRequest ar) throws Exception {
+            }
+        });
         server.addEventListener("send_to_user", ModelSendMessage.class, new DataListener<ModelSendMessage>() {
             @Override
             public void onData(SocketIOClient sioc, ModelSendMessage t, AckRequest ar) throws Exception {
@@ -108,15 +115,16 @@ public class Service {
             @Override
             public void onData(SocketIOClient sioc, ModelPackageSender t, AckRequest ar) throws Exception {
                 try {
+                    System.out.println("Receiving file data...");
                     serviceFile.receiveFile(t);
                     if (t.isFinish()) {
+                        System.out.println("File receiving finished. Closing file...");
                         ar.sendAckData(true);
                         ModelReceiveImage dataImage = new ModelReceiveImage();
                         dataImage.setFileID(t.getFileID());
                         ModelSendMessage message = serviceFile.closeFile(dataImage);
-                        //  Send to client 'message'
+                        System.out.println("Sending temporary file to client...");
                         sendTempFileToClient(message, dataImage);
-                        
                     } else {
                         ar.sendAckData(true);
                     }
@@ -126,13 +134,10 @@ public class Service {
                 }
             }
         });
-        server.addEventListener("get_file", Integer.class, new DataListener<Integer>() {
-            @Override
-            public void onData(SocketIOClient sioc, Integer t, AckRequest ar) throws Exception {
-                ModelFile file = serviceFile.initFile(t);
-                long fileSize = serviceFile.getFileSize(t);
-                ar.sendAckData(file.getFileExtension(), fileSize);
-            }
+        server.addEventListener("get_file", Integer.class, (SocketIOClient sioc, Integer t, AckRequest ar) -> {
+            ModelFile file = serviceFile.initFile(t);
+            long fileSize = serviceFile.getFileSize(t);
+            ar.sendAckData(file.getFileExtension(), fileSize);
         });
         server.addEventListener("request_file", ModelRequestFile.class, new DataListener<ModelRequestFile>() {
             @Override
@@ -147,11 +152,11 @@ public class Service {
         });
         server.addDisconnectListener(new DisconnectListener() {
             public void onDisconnect(SocketIOClient sioc) {
+                textArea.append("One client disconnected\n");
                 int userID = removeClient(sioc);
                 if (userID != 0) {
-                   ModelUserAccount user = getUserByID(userID);
+                    ModelUserAccount user = getUserByID(userID);
                     if (user != null) {
-                        // Thêm thông báo người dùng ngắt kết nối vào textArea
                         textArea.append(user.getUserName() + " client disconnected\n");
                     }
                     userDisconnect(userID);

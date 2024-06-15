@@ -36,11 +36,11 @@ public class ModelFileReceiver {
     }
 
     public String getFileExtention() {
-        return fileExtension;
+        return fileExtention;
     }
 
     public void setFileExtention(String fileExtention) {
-        this.fileExtension = fileExtention;
+        this.fileExtention = fileExtention;
     }
 
     public RandomAccessFile getAccFile() {
@@ -79,7 +79,7 @@ public class ModelFileReceiver {
     private int fileID;
     private File file;
     private long fileSize;
-    private String fileExtension;
+    private String fileExtention;
     private RandomAccessFile accFile;
     private Socket socket;
     private EventFileReceiver event;
@@ -91,9 +91,9 @@ public class ModelFileReceiver {
             public void call(Object... os) {
                 if (os.length > 0) {
                     try {
-                        fileExtension = os[0].toString();
+                        fileExtention = os[0].toString();
                         fileSize = (int) os[1];
-                        file = new File(PATH_FILE + fileID + fileExtension);
+                        file = new File(PATH_FILE + fileID + fileExtention);
                         accFile = new RandomAccessFile(file, "rw");
                         event.onStartReceiving();
                         //  start save file
@@ -119,7 +119,7 @@ public class ModelFileReceiver {
                         startSaveFile();
                     } else {
                         close();
-                        event.onFinish(new File(PATH_FILE + fileID + fileExtension));
+                        event.onFinish(new File(PATH_FILE + fileID + fileExtention));
                         //  remove list
                         Service.getInstance().fileReceiveFinish(ModelFileReceiver.this);
                     }

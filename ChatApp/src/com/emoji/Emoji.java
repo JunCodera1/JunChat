@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 public class Emoji {
+    private final int emojiSize = 107;
     private static Emoji instance;
     public static Emoji getInstance(){
         if(instance == null){
@@ -17,16 +18,9 @@ public class Emoji {
         
     }
     
-    public List<ModelEmoji>getStyle1(){
+    public List<ModelEmoji>getStyle(){
         List<ModelEmoji> list  = new ArrayList<>();
-        for(int i = 1; i <= 20; i++){
-            list.add(new ModelEmoji(i, new ImageIcon(getClass().getResource("/com/emoji/icon/" + i + ".png"))));
-        }
-        return list;
-    }
-    public List<ModelEmoji>getStyle2(){
-        List<ModelEmoji> list  = new ArrayList<>();
-        for(int i = 21; i <= 40; i++){
+        for(int i = 1; i < emojiSize; i++){
             list.add(new ModelEmoji(i, new ImageIcon(getClass().getResource("/com/emoji/icon/" + i + ".png"))));
         }
         return list;

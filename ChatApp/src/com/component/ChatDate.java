@@ -1,5 +1,5 @@
 package com.component;
-
+  
 public class ChatDate extends javax.swing.JLayeredPane {
 
     public ChatDate() {
@@ -7,7 +7,7 @@ public class ChatDate extends javax.swing.JLayeredPane {
     }
     
     public void setDate(String date){
-        lbDate.setText(date);
+        lbDate.setText(String.valueOf(java.time.LocalDate.now()));
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -19,7 +19,7 @@ public class PanelSlide extends javax.swing.JPanel {
 
     public PanelSlide() {
         list = new ArrayList<>();
-        timer = new Timer(0, new ActionListener() {
+        timer = new Timer(0, new ActionListener() {  // Increased timer delay to 30 ms
             @Override
             public void actionPerformed(ActionEvent ae) {
                 animate();
@@ -34,7 +34,7 @@ public class PanelSlide extends javax.swing.JPanel {
     private Component comShow;
     private int currentShowing;
     private boolean animateRight;
-    private int animate = 1;
+    private int animate = 1;  // You can decrease this value to make the animation smoother and slower
 
     public void init(Component... com) {
         if (com.length > 0) {

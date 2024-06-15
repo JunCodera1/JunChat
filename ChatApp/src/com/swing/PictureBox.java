@@ -21,6 +21,10 @@ public class PictureBox extends JLayeredPane {
         this.image = image;
         repaint();
     }
+    
+    public void setFile(Icon file){
+        
+    }
 
     private Icon image;
 

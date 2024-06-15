@@ -1,6 +1,7 @@
 package com.component;
 
 import com.model.ModelFileSender;
+import com.model.ModelReceiveFile;
 import com.model.ModelReceiveImage;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -8,6 +9,7 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -65,10 +67,9 @@ public class ChatItem extends javax.swing.JLayeredPane {
         chatImage.addImage(fileSender);
         layer.add(chatImage);
         add(layer);
-
     }
 
-    public void setImage(boolean right, ModelReceiveImage dataImage) {
+    public void setImage(boolean right, ModelReceiveImage dataImage) throws IOException {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 10, 5));
@@ -78,12 +79,22 @@ public class ChatItem extends javax.swing.JLayeredPane {
         add(layer);
     }
 
-    public void setFile(String fileName, String fileSize) {
+    public void setFile(boolean right, ModelFileSender fileSender) {
         JLayeredPane layer = new JLayeredPane();
-        layer.setLayout(new FlowLayout(FlowLayout.LEFT));
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 10, 5));
-        ChatFile chatFile = new ChatFile();
-        chatFile.setFile(fileName, fileSize);
+        ChatFile chatFile = new ChatFile(true);
+        chatFile.setFile(fileSender.getFileName(), fileSender.getFileSize());
+        layer.add(chatFile);
+        add(layer);
+    }
+    
+    public void setFile(boolean right, ModelReceiveFile dataFile) throws IOException {
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 10, 5));
+        ChatFile chatFile = new ChatFile(right);
+        chatFile.addFile(dataFile);
         layer.add(chatFile);
         add(layer);
     }

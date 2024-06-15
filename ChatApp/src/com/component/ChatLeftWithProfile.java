@@ -1,11 +1,14 @@
 package com.component;
 
+import com.model.ModelFileSender;
 import com.model.ModelReceiveImage;
 import java.awt.Color;
+import java.io.IOException;
+import java.time.LocalTime;
 import javax.swing.Icon;
 
 public class ChatLeftWithProfile extends javax.swing.JLayeredPane {
-
+    private LocalTime time;
     public ChatLeftWithProfile() {
         initComponents();
         txt.setBackground(new Color(242, 242, 242));
@@ -32,16 +35,20 @@ public class ChatLeftWithProfile extends javax.swing.JLayeredPane {
    //     txt.setImage(false, image);
     }
     
-    public void setImage(ModelReceiveImage dataImage) {
+    public void setImage(ModelReceiveImage dataImage) throws IOException {
         txt.setImage(false, dataImage);
     }
     
-    public void setFile(String fileName, String fileSize){
-        txt.setFile(fileName, fileSize);
+    public void setFile(ModelFileSender file){
+        txt.setFile(true, file);
     }
 
-    public void setTime() {
-        txt.setTime("10:30 PM");    //  Testing
+    public void setTime(){
+        time = LocalTime.now();
+        if (time != null) {
+            String formattedTime = String.format("%02d:%02d", time.getHour(), time.getMinute());
+            txt.setTime(formattedTime);
+        }
     }
 
     @SuppressWarnings("unchecked")

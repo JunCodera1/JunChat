@@ -1,4 +1,5 @@
 package com.swing.blurHash;
+
 class Util {
 
     private static double signPow(double value, double exp) {
@@ -34,6 +35,25 @@ class Util {
         double quantG = Math.floor(Math.max(0, Math.min(18, Math.floor(signPow(value[1] / maximumValue, 0.5) * 9 + 9.5))));
         double quantB = Math.floor(Math.max(0, Math.min(18, Math.floor(signPow(value[2] / maximumValue, 0.5) * 9 + 9.5))));
         return Math.round(quantR * 19 * 19 + quantG * 19 + quantB);
+    }
+
+    static void applyBasisFunction(int[] pixels, int width, int height, double normalisation, int i, int j, double[][] factors, int index) {
+        double r = 0, g = 0, b = 0;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                double basis = normalisation
+                        * Math.cos((Math.PI * i * x) / width)
+                        * Math.cos((Math.PI * j * y) / height);
+                int pixel = pixels[y * width + x];
+                r += basis * SRGB.toLinear((pixel >> 16) & 0xff);
+                g += basis * SRGB.toLinear((pixel >> 8) & 0xff);
+                b += basis * SRGB.toLinear(pixel & 0xff);
+            }
+        }
+        double scale = 1.0 / (width * height);
+        factors[index][0] = r * scale;
+        factors[index][1] = g * scale;
+        factors[index][2] = b * scale;
     }
 
     static double max(double[][] values) {

@@ -27,39 +27,29 @@ public class Login extends javax.swing.JPanel {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        PublicEvent.getInstance().getEventMain().showLoading(true);
                         try {
-                            PublicEvent.getInstance().getEventMain().showLoading(true);
-                            try {
-                                Thread.sleep(1000); //  for test
-                            } catch (InterruptedException e) {
-                            }
-                            Service.getInstance().getClient().emit("login", data.toJsonObject(), new Ack() {
-                                @Override
-                                public void call(Object... os) {
-                                    if (os.length > 0) {
-                                        boolean action = (Boolean) os[0];
-                                        if (action) {
-                                            try {
-                                                Service.getInstance().setUser(new ModelUserAccount(os[1]));
-                                                PublicEvent.getInstance().getEventMain().showLoading(false);
-                                                PublicEvent.getInstance().getEventMain().initChat();
-                                            } catch (UnknownHostException ex) {
-                                                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                                            }
-                                        } else {
-                                            //  password wrong
-                                            PublicEvent.getInstance().getEventMain().showLoading(false);
-                                        }
+                            Thread.sleep(1000); //  for test
+                        } catch (InterruptedException e) {
+                        }
+                        Service.getInstance().getClient().emit("login", data.toJsonObject(), new Ack() {
+                            @Override
+                            public void call(Object... os) {
+                                if (os.length > 0) {
+                                    boolean action = (Boolean) os[0];
+                                    if (action) {
+                                        Service.getInstance().setUser(new ModelUserAccount(os[1]));
+                                        PublicEvent.getInstance().getEventMain().showLoading(false);
+                                        PublicEvent.getInstance().getEventMain().initChat();
                                     } else {
+                                        //  password wrong
                                         PublicEvent.getInstance().getEventMain().showLoading(false);
                                     }
+                                } else {
+                                    PublicEvent.getInstance().getEventMain().showLoading(false);
                                 }
-                            });
-                            
-                            
-                        } catch (UnknownHostException ex) {
-                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                            }
+                        });
                         
 
                     }
@@ -68,28 +58,20 @@ public class Login extends javax.swing.JPanel {
 
             @Override
             public void register(ModelRegister data, EventMessage message) {
-                try {
-                    Service.getInstance().getClient().emit("register", data.toJsonObject(), new Ack() {
-                        @Override
-                        public void call(Object... os) {
-                            if (os.length > 0) {
-                                ModelMessage ms = new ModelMessage((boolean) os[0], os[1].toString());
-                                if (ms.isAction()) {
-                                    try {
-                                        ModelUserAccount user = new ModelUserAccount(os[2]);
-                                        Service.getInstance().setUser(user);
-                                    } catch (UnknownHostException ex) {
-                                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                                message.callMessage(ms);
-                                //  call message back when done register
+                Service.getInstance().getClient().emit("register", data.toJsonObject(), new Ack() {
+                    @Override
+                    public void call(Object... os) {
+                        if (os.length > 0) {
+                            ModelMessage ms = new ModelMessage((boolean) os[0], os[1].toString());
+                            if (ms.isAction()) {
+                                ModelUserAccount user = new ModelUserAccount(os[2]);
+                                Service.getInstance().setUser(user);
                             }
+                            message.callMessage(ms);
+                            //  call message back when done register
                         }
-                    });
-                } catch (UnknownHostException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    }
+                });
             }
 
             @Override
@@ -104,7 +86,8 @@ public class Login extends javax.swing.JPanel {
         });
         PLogin login = new PLogin();
         PRegister register = new PRegister();
-        slide.init(login, register);
+        PForgotPassword forgotPassword = new PForgotPassword();
+        slide.init(login, register, forgotPassword);
     }
 
     @SuppressWarnings("unchecked")

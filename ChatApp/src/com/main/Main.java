@@ -24,22 +24,18 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void init() {
-        try {
-            setIconImage(new ImageIcon(getClass().getResource("/com/icon/icon.png")).getImage());
-            ComponentResizer com = new ComponentResizer();
-            com.registerComponent(this);
-            com.setMinimumSize(new Dimension(900, 500));
-            com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
-            com.setSnapSize(new Dimension(10, 10));
-            login.setVisible(true);
-            loading.setVisible(false);
-            vIew_Image.setVisible(false);
-            home.setVisible(false);
-            initEvent();
-            Service.getInstance().startServer();
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        setIconImage(new ImageIcon(getClass().getResource("/com/icon/icon.png")).getImage());
+        ComponentResizer com = new ComponentResizer();
+        com.registerComponent(this);
+        com.setMinimumSize(new Dimension(900, 500));
+        com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
+        com.setSnapSize(new Dimension(10, 10));
+        login.setVisible(true);
+        loading.setVisible(false);
+        vIew_Image.setVisible(false);
+        home.setVisible(false);
+        initEvent();
+        Service.getInstance().startServer();
     }
 
     private void initEvent() {
@@ -51,13 +47,9 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public void initChat() {
-                try {
-                    home.setVisible(true);
-                    login.setVisible(false);
-                    Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
-                } catch (UnknownHostException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                home.setVisible(true);
+                login.setVisible(false);
+                Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
             }
 
             @Override
