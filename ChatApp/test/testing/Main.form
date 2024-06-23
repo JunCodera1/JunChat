@@ -41,7 +41,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="com.swing.PictureBox" name="pictureBox2">
+    <Container class="com.view.swingController.PictureBox" name="pictureBox2">
       <Properties>
         <Property name="image" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/testing/dog.jpg"/>

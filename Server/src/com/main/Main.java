@@ -1,7 +1,7 @@
 package com.main;
 
-import com.connection.DatabaseConnection;
-import com.service.Service;
+import com.controller.connection.DatabaseConnection;
+import com.controller.service.ServiceController;
 
 public class Main extends javax.swing.JFrame {
 
@@ -57,7 +57,7 @@ public class Main extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try{
             DatabaseConnection.getInstance().connectToDatabase();
-            Service.getInstance(txt).startServer();
+            ServiceController.getInstance(txt).startServer();
         }catch(Exception e){
             txt.append("Error : " + e + "\n");
             

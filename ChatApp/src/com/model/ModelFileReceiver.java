@@ -1,13 +1,13 @@
 package com.model;
 
-import com.event.EventFileReceiver;
-import com.service.Service;
+import com.controller.service.ServiceController;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import org.json.JSONException;
+import com.controller.event.EventFileReceiverController;
 
 public class ModelFileReceiver {
 
@@ -59,15 +59,15 @@ public class ModelFileReceiver {
         this.socket = socket;
     }
 
-    public EventFileReceiver getEvent() {
+    public EventFileReceiverController getEvent() {
         return event;
     }
 
-    public void setEvent(EventFileReceiver event) {
+    public void setEvent(EventFileReceiverController event) {
         this.event = event;
     }
 
-    public ModelFileReceiver(int fileID, Socket socket, EventFileReceiver event) {
+    public ModelFileReceiver(int fileID, Socket socket, EventFileReceiverController event) {
         this.fileID = fileID;
         this.socket = socket;
         this.event = event;
@@ -82,7 +82,7 @@ public class ModelFileReceiver {
     private String fileExtention;
     private RandomAccessFile accFile;
     private Socket socket;
-    private EventFileReceiver event;
+    private EventFileReceiverController event;
     private final String PATH_FILE = "client_data/";
 
     public void initReceive() {
@@ -121,7 +121,7 @@ public class ModelFileReceiver {
                         close();
                         event.onFinish(new File(PATH_FILE + fileID + fileExtention));
                         //  remove list
-                        Service.getInstance().fileReceiveFinish(ModelFileReceiver.this);
+                        ServiceController.getInstance().fileReceiveFinish(ModelFileReceiver.this);
                     }
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();

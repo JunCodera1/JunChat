@@ -1,6 +1,6 @@
 package testing;
 
-import com.swing.blurHash.BlurHash;
+import com.view.swing.blurHash.BlurHash;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

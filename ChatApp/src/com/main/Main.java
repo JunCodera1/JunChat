@@ -1,22 +1,21 @@
 package com.main;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
-import com.event.EventImageView;
-import com.event.EventMain;
-import com.event.PublicEvent;
+import com.controller.event.PublicEvent;
 import com.model.ModelUserAccount;
-import com.service.Service;
-import com.swing.ComponentResizer;
+import com.controller.service.ServiceController;
+import com.view.swingController.ComponentResizer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import com.controller.event.EventImageViewController;
+import com.controller.event.EventMainController;
 
 public class Main extends javax.swing.JFrame {
+
+    private boolean isMaximized = false;
 
     public Main() {
         initComponents();
@@ -35,11 +34,11 @@ public class Main extends javax.swing.JFrame {
         vIew_Image.setVisible(false);
         home.setVisible(false);
         initEvent();
-        Service.getInstance().startServer();
+        ServiceController.getInstance().startServer();
     }
 
     private void initEvent() {
-        PublicEvent.getInstance().addEventMain(new EventMain() {
+        PublicEvent.getInstance().addEventMain(new EventMainController() {
             @Override
             public void showLoading(boolean show) {
                 loading.setVisible(show);
@@ -49,7 +48,7 @@ public class Main extends javax.swing.JFrame {
             public void initChat() {
                 home.setVisible(true);
                 login.setVisible(false);
-                Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
+                ServiceController.getInstance().getClient().emit("list_user", ServiceController.getInstance().getUser().getUserID());
             }
 
             @Override
@@ -63,7 +62,7 @@ public class Main extends javax.swing.JFrame {
             }
 
         });
-        PublicEvent.getInstance().addEventImageView(new EventImageView() {
+        PublicEvent.getInstance().addEventImageView(new EventImageViewController() {
             @Override
             public void viewImage(Icon image) {
                 vIew_Image.viewImage(image);
@@ -84,19 +83,20 @@ public class Main extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
         border = new javax.swing.JPanel();
         background = new javax.swing.JPanel();
         title = new javax.swing.JPanel();
         cmdMinimize = new javax.swing.JButton();
+        cmdMaximize = new javax.swing.JButton();
         cmdClose = new javax.swing.JButton();
         body = new javax.swing.JLayeredPane();
-        loading = new com.form.Loading();
-        login = new com.form.Login();
-        vIew_Image = new com.form.VIew_Image();
-        home = new com.form.Home();
+        loading = new com.view.form.Loading();
+        login = new com.view.form.Login();
+        vIew_Image = new com.view.form.VIew_Image();
+        home = new com.view.form.Home();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -127,6 +127,16 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        cmdMaximize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/icon/maximize.png"))); // NOI18N
+        cmdMaximize.setBorder(null);
+        cmdMaximize.setContentAreaFilled(false);
+        cmdMaximize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cmdMaximize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdMaximizeActionPerformed(evt);
+            }
+        });
+
         cmdClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/icon/close.png"))); // NOI18N
         cmdClose.setBorder(null);
         cmdClose.setContentAreaFilled(false);
@@ -145,6 +155,8 @@ public class Main extends javax.swing.JFrame {
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cmdMinimize)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmdMaximize)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cmdClose)
                                 .addContainerGap())
         );
@@ -154,7 +166,8 @@ public class Main extends javax.swing.JFrame {
                                 .addGap(0, 0, 0)
                                 .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(cmdClose, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-                                        .addComponent(cmdMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(cmdMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cmdMaximize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(0, 0, 0))
         );
 
@@ -215,26 +228,36 @@ public class Main extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
     private int pX;
     private int pY;
-    private void titleMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleMouseDragged
+    private void titleMouseDragged(java.awt.event.MouseEvent evt) {                                   
         this.setLocation(this.getLocation().x + evt.getX() - pX, this.getLocation().y + evt.getY() - pY);
-    }//GEN-LAST:event_titleMouseDragged
+    }                                  
 
-    private void titleMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleMousePressed
+    private void titleMousePressed(java.awt.event.MouseEvent evt) {                                   
         pX = evt.getX();
         pY = evt.getY();
-    }//GEN-LAST:event_titleMousePressed
+    }                                  
 
-    private void cmdCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCloseActionPerformed
+    private void cmdCloseActionPerformed(java.awt.event.ActionEvent evt) {                                         
         System.exit(0);
-    }//GEN-LAST:event_cmdCloseActionPerformed
+    }                                        
 
-    private void cmdMinimizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMinimizeActionPerformed
+    private void cmdMinimizeActionPerformed(java.awt.event.ActionEvent evt) {                                            
         this.setState(JFrame.ICONIFIED);
-    }//GEN-LAST:event_cmdMinimizeActionPerformed
+    }                                           
+
+    private void cmdMaximizeActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        if (isMaximized) {
+            setExtendedState(JFrame.NORMAL);
+            isMaximized = false;
+        } else {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            isMaximized = true;
+        }
+    }
 
     public static void main(String args[]) {
         FlatArcIJTheme.setup();
@@ -246,16 +269,17 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JPanel background;
     private javax.swing.JLayeredPane body;
     private javax.swing.JPanel border;
     private javax.swing.JButton cmdClose;
     private javax.swing.JButton cmdMinimize;
-    private com.form.Home home;
-    private com.form.Loading loading;
-    private com.form.Login login;
+    private javax.swing.JButton cmdMaximize;
+    private com.view.form.Home home;
+    private com.view.form.Loading loading;
+    private com.view.form.Login login;
     private javax.swing.JPanel title;
-    private com.form.VIew_Image vIew_Image;
-    // End of variables declaration//GEN-END:variables
+    private com.view.form.VIew_Image vIew_Image;
+    // End of variables declaration                   
 }

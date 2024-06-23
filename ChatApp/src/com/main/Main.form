@@ -148,7 +148,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
               <SubComponents>
-                <Component class="com.form.VIew_Image" name="vIew_Image">
+                <Component class="com.view.form.VIew_Image" name="vIew_Image">
                   <AuxValues>
                     <AuxValue name="JLayeredPane.layer" type="java.lang.Integer" value="300"/>
                   </AuxValues>
@@ -158,14 +158,14 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="com.form.Home" name="home">
+                <Component class="com.view.form.Home" name="home">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
                       <CardConstraints cardName="card2"/>
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="com.form.Login" name="login">
+                <Component class="com.view.form.Login" name="login">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
                       <CardConstraints cardName="card4"/>

@@ -1,12 +1,12 @@
     package com.model;
 
-    import com.event.EventFileSender;
-    import com.service.Service;
+    import com.controller.service.ServiceController;
     import io.socket.client.Ack;
     import io.socket.client.Socket;
     import java.io.File;
     import java.io.IOException;
     import java.io.RandomAccessFile;
+import com.controller.event.EventFileSenderController;
 
     public class ModelFileSender {
 
@@ -85,7 +85,7 @@
         private long fileSize;
         private RandomAccessFile accFile;
         private Socket socket;
-        private EventFileSender event;
+        private EventFileSenderController event;
 
         public synchronized byte[] readFile() throws IOException {
             long filepointer = accFile.getFilePointer();
@@ -149,7 +149,7 @@
                                     sendingFile();
                                 } else {
                                     //  File send finish
-                                    Service.getInstance().fileSendFinish(ModelFileSender.this);
+                                    ServiceController.getInstance().fileSendFinish(ModelFileSender.this);
                                     if (event != null) {
                                         event.onFinish();
                                     }
@@ -178,7 +178,7 @@
             return fileName.substring(fileName.lastIndexOf("."), fileName.length());
         }
 
-        public void addEvent(EventFileSender event) {
+        public void addEvent(EventFileSenderController event) {
             this.event = event;
         }
 

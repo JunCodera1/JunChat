@@ -1,6 +1,6 @@
 package com.model;
 
-import com.app.MessageType;
+import com.model.app.MessageType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
